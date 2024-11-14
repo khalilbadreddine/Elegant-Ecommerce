@@ -1,6 +1,6 @@
 // src/components/Header.jsx
 import { useState } from "react";
-import { Cart, Hamburger } from "./Icons";
+import { Cart, Hamburger, Search, Profile } from "./Icons";
 import Sidebar from "./Sidebar";
 
 const Header = () => {
@@ -37,8 +37,12 @@ const Header = () => {
 
       {/* Right Section: Icons */}
       <div className="flex items-center space-x-4">
-        <div className="hidden md:block bg-gray-300 w-5 h-5 rounded-full"></div>
-        <div className="hidden md:block bg-gray-300 w-5 h-5 rounded-full"></div>
+        <div className="hidden md:block  w-5 h-5 rounded-full">
+          <Search />
+        </div>
+        <div className="hidden md:block  w-5 h-5 rounded-full">
+          <Profile />
+        </div>
         <div className="relative">
           <Cart />
           <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
