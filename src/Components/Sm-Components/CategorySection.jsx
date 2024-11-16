@@ -5,96 +5,66 @@ import toast from "/assets/toast.png";
 
 const CategorySection = () => {
   return (
-    <div className="container mx-auto p-4">
-      {/* Mobile Layout */}
-      <div className="grid grid-cols-1 md:hidden gap-6">
-        {/* First Category - Living Room */}
-        <div className="bg-gray-100 p-4 h-72 flex relative">
-          <div className="absolute top-4 left-4 flex flex-col space-y-2">
-            <h2 className="text-xl font-semibold">Living Room</h2>
-            <a href="#" className="text-blue-500 hover:underline">
-              Shop Now →
-            </a>
-          </div>
-          <img
-            src={couchGray}
-            alt="Couch"
-            className="w-[60%] h-[60%] absolute bottom-4 right-4 object-cover"
-          />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
+      {/* Living Room Section */}
+      <div className="bg-gray-200 rounded-md flex flex-col items-start p-4">
+        {/* Text Content */}
+        <div className="flex flex-col space-y-2 w-full text-left">
+          <h2 className="text-gray-800 font-bold text-2xl sm:text-3xl lg:text-4xl">
+            Living Room
+          </h2>
+          <button className="text-blue-500 font-medium text-lg sm:text-xl lg:text-2xl self-start">
+            Shop Now →
+          </button>
         </div>
-
-        {/* Other Categories */}
-        <div className="bg-gray-100 p-4 h-56 flex items-center justify-between">
-          <div className="flex flex-col justify-center space-y-2">
-            <h2 className="text-xl font-semibold">Bedroom</h2>
-            <a href="#" className="text-blue-500 hover:underline">
-              Shop Now →
-            </a>
-          </div>
-          <img
-            src={plakar}
-            alt="Drawer"
-            className="w-[60%] h-auto object-cover"
-          />
-        </div>
-        <div className="bg-gray-100 p-4 h-56 flex items-center justify-between">
-          <div className="flex flex-col justify-center space-y-2">
-            <h2 className="text-xl font-semibold">Kitchen</h2>
-            <a href="#" className="text-blue-500 hover:underline">
-              Shop Now →
-            </a>
-          </div>
-          <img
-            src={toast}
-            alt="Toaster"
-            className="w-[60%] h-auto object-cover"
-          />
-        </div>
+        {/* Responsive Image */}
+        <img
+          src={couchGray}
+          alt="Living Room Couch"
+          className="w-full h-auto max-w-md object-contain"
+        />
       </div>
 
-      {/* Desktop Layout */}
-      <div className="hidden md:grid grid-cols-2 gap-6">
-        {/* First Category - Living Room */}
-        <div className="bg-gray-100 p-4 h-96 flex relative">
-          <div className="absolute top-6 left-6 flex flex-col space-y-2">
-            <h2 className="text-xl font-semibold">Living Room</h2>
-            <a href="#" className="text-blue-500 hover:underline">
+      {/* Bedroom and Kitchen Sections */}
+      <div className="flex flex-col gap-4">
+        {/* Bedroom Section */}
+        <div className="bg-gray-200 rounded-md flex items-center justify-between p-4">
+          {/* Text Content */}
+          <div className="flex flex-col space-y-2 self-end">
+            <h2 className="text-gray-800 font-bold text-2xl sm:text-3xl lg:text-4xl">
+              Bedroom
+            </h2>
+            <button className="text-blue-500 font-medium text-lg sm:text-xl lg:text-2xl">
               Shop Now →
-            </a>
+            </button>
           </div>
-          <img
-            src={couchGray}
-            alt="Couch"
-            className="w-[60%] h-[60%] absolute bottom-6 right-6 object-cover"
-          />
-        </div>
-
-        <div className="grid grid-rows-2 gap-6">
-          {/* Other Categories */}
-          <div className="bg-gray-100 p-4 h-56 flex items-center justify-between">
-            <div className="flex flex-col justify-center space-y-2">
-              <h2 className="text-xl font-semibold">Bedroom</h2>
-              <a href="#" className="text-blue-500 hover:underline">
-                Shop Now →
-              </a>
-            </div>
+          {/* Image */}
+          <div className="flex-shrink-0 w-1/2">
             <img
               src={plakar}
-              alt="Drawer"
-              className="w-[60%] h-auto object-cover"
+              alt="Bedroom Wardrobe"
+              className="w-full h-auto object-contain"
             />
           </div>
-          <div className="bg-gray-100 p-4 h-56 flex items-center justify-between">
-            <div className="flex flex-col justify-center space-y-2">
-              <h2 className="text-xl font-semibold">Kitchen</h2>
-              <a href="#" className="text-blue-500 hover:underline">
-                Shop Now →
-              </a>
-            </div>
+        </div>
+
+        {/* Kitchen Section */}
+        <div className="bg-gray-200 rounded-md flex items-center justify-between p-4">
+          {/* Text Content */}
+          <div className="flex flex-col space-y-2 self-end">
+            <h2 className="text-gray-800 font-bold text-2xl sm:text-3xl lg:text-4xl">
+              Kitchen
+            </h2>
+            <button className="text-blue-500 font-medium text-lg sm:text-xl lg:text-2xl">
+              Shop Now →
+            </button>
+          </div>
+          {/* Image */}
+          <div className="flex-shrink-0 w-1/2">
             <img
               src={toast}
-              alt="Toaster"
-              className="w-[60%] h-auto object-cover"
+              alt="Kitchen Toaster"
+              className="w-full h-auto object-contain"
             />
           </div>
         </div>
