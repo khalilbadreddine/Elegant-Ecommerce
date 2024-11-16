@@ -115,7 +115,10 @@ const NewArrival = () => {
       ref={sliderContainerRef}
       className="w-full mb-20 max-w-6xl mx-auto p-4"
     >
-      <h2 className="text-2xl font-bold mb-4">New Arrivals:</h2>
+      <h2 className="text-2xl font-bold mb-4">
+        New <br />
+        Arrivals:
+      </h2>
       <div className="relative">
         {/* Slider */}
         <Slider {...settings}>
