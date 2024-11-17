@@ -55,7 +55,7 @@ const ArticlesSection = () => {
               </h3>
               <a
                 href={article.link}
-                className=" inline-block text-sm hover:underline"
+                className=" inline-block text-sm underline"
               >
                 Read More →
               </a>

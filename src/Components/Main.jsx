@@ -10,6 +10,8 @@ import ProductCard from "./Sm-Components/ProductCard";
 import FeaturesSection from "./Sm-Components/FeaturesSection";
 import PromoSection from "./Sm-Components/PromoSection";
 import ArticlesSection from "./Sm-Components/ArticlesSection";
+import NewsletterSection from "./Sm-Components/NewsletterSection";
+import Footer from "./Sm-Components/Footer";
 
 const Main = () => {
   return (
@@ -25,6 +27,8 @@ const Main = () => {
         <FeaturesSection />
         <PromoSection />
         <ArticlesSection />
+        <NewsletterSection />
+        <Footer />
       </div>
     </>
   );
