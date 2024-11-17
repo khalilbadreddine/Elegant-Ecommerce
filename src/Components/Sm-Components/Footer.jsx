@@ -7,10 +7,11 @@ const Footer = () => {
       {/* Mobile Layout */}
       <div className="container mx-auto px-4 flex flex-col items-center space-y-6 sm:hidden">
         <h1 className="text-xl font-semibold">3legant</h1>
-        <p className="text-sm">Gift & Decoration Store</p>
 
         {/* Divider Line */}
-        <div className="w-full border-t border-gray-500"></div>
+        <div className="w-[10%] border-t border-gray-500"></div>
+
+        <p className="text-sm">Gift & Decoration Store</p>
 
         <nav className="flex flex-col items-center space-y-2 text-sm">
           <a href="#home" className="hover:text-gray-400">
@@ -46,7 +47,6 @@ const Footer = () => {
         </div>
 
         {/* Divider Line */}
-        <div className="w-full border-t border-gray-500"></div>
 
         <div className="text-xs text-center space-y-1">
           <div className="flex justify-center space-x-2">

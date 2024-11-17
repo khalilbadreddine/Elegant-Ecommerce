@@ -1,25 +1,49 @@
 import React from "react";
-import { MailIcon } from "./Icons"; // Import the icon
+import { MailIcon } from "./Icons";
+
+const InputWithIcon = ({ id, name, icon: Icon, placeholder }) => (
+  <div className="flex items-center w-full">
+    <span className="p-2">
+      <Icon />
+    </span>
+    <input
+      id={id}
+      name={name}
+      type="email"
+      placeholder={placeholder}
+      className="flex-grow p-2 bg-transparent border-b border-gray-300 focus:border-gray-500 focus:outline-none"
+    />
+  </div>
+);
+
+const StyledImage = ({ src, alt, className }) => (
+  <img
+    src={src}
+    alt={alt}
+    className={`w-auto h-[350px] object-cover transform scale-125 ${className}`}
+    loading="lazy"
+  />
+);
 
 const NewsletterSection = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted");
+    const email = e.target.elements.email?.value.trim();
+    if (!email) {
+      alert("Please enter a valid email address.");
+      return;
+    }
+    console.log("Email submitted:", email);
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between p-4 md:p-0 overflow-hidden  bg-gray-100">
-      {/* Left image for desktop only */}
-      <div className="hidden md:block flex-1">
-        <img
-          src="/assets/plakar.png"
-          alt="Left side"
-          className="w-auto h-[350px] object-cover transform scale-125 -translate-x-16"
-          loading="lazy"
-        />
-      </div>
+    <div className="flex flex-col md:flex-row items-center justify-between p-4 md:p-0 overflow-hidden bg-gray-100">
+      <StyledImage
+        src="/assets/plakar2.png"
+        alt="Left side"
+        className="-translate-x-16 hidden md:block flex-1"
+      />
 
-      {/* Newsletter Form */}
       <div className="flex flex-col items-center justify-center flex-1 px-10 py-10">
         <section>
           <h2 className="text-2xl font-bold text-center mb-2">
@@ -31,40 +55,28 @@ const NewsletterSection = () => {
         </section>
         <form
           onSubmit={handleSubmit}
-          className="flex items-center w-full mt-4 space-x-2"
+          className="group flex items-center w-full mt-4 space-x-2"
         >
-          {/* Input with bottom border */}
-          <div className="flex items-center w-full">
-            <span className="p-2">
-              <MailIcon />
-            </span>
-            <input
-              type="email"
-              placeholder="Email address"
-              aria-label="Email address"
-              className="flex-grow p-2 bg-transparent border-b border-gray-300 focus:border-gray-500 focus:outline-none"
-            />
-          </div>
-
-          {/* Button with bottom border */}
+          <InputWithIcon
+            id="newsletter-email"
+            name="email"
+            icon={MailIcon}
+            placeholder="Email address"
+          />
           <button
             type="submit"
-            className="px-4 py-2 text-black bg-transparent border-b border-black hover:bg-gray-200"
+            className="px-4 py-2 text-black bg-transparent border-b border-black group-hover:bg-gray-200"
           >
             Signup
           </button>
         </form>
       </div>
 
-      {/* Right image for desktop only */}
-      <div className="hidden md:block">
-        <img
-          src="/assets/couch2.png"
-          alt="Right side"
-          className="w-auto h-[400px] object-cover transform scale-125 translate-x-16"
-          loading="lazy"
-        />
-      </div>
+      <StyledImage
+        src="/assets/couch2.png"
+        alt="Right side"
+        className="translate-x-16 hidden md:block"
+      />
     </div>
   );
 };
