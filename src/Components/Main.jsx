@@ -13,7 +13,7 @@ const Main = () => {
   return (
     <>
       <AnnouncementBar />
-      <div className="w-[80%] mx-auto  flex flex-col">
+      <div className="w-[85%] mx-auto  flex flex-col">
         <Header />
         <Carousel />
         <TaglineSection /> {/* Add the new TaglineSection here */}
