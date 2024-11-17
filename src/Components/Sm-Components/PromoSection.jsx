@@ -2,7 +2,7 @@ import React from "react";
 
 const PromoSection = () => {
   return (
-    <div className="bg-gray-100 mb-20">
+    <div className="bg-gray-100 mb-5">
       {/* Container for alignment */}
       <div className="flex flex-col lg:flex-row items-center max-w-7xl mx-auto">
         {/* Image Section */}
