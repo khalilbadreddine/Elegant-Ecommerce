@@ -1,4 +1,4 @@
-import React from "react";
+import PropTypes from "prop-types"; // Import PropTypes
 import { MailIcon } from "./Icons";
 
 const InputWithIcon = ({ id, name, icon: Icon, placeholder }) => (
@@ -16,6 +16,14 @@ const InputWithIcon = ({ id, name, icon: Icon, placeholder }) => (
   </div>
 );
 
+// Prop validation for InputWithIcon
+InputWithIcon.propTypes = {
+  id: PropTypes.string.isRequired, // `id` must be a string and is required
+  name: PropTypes.string.isRequired, // `name` must be a string and is required
+  icon: PropTypes.elementType.isRequired, // `icon` must be a React component (function or class)
+  placeholder: PropTypes.string, // `placeholder` must be a string
+};
+
 const StyledImage = ({ src, alt, className }) => (
   <img
     src={src}
@@ -24,6 +32,13 @@ const StyledImage = ({ src, alt, className }) => (
     loading="lazy"
   />
 );
+
+// Prop validation for StyledImage
+StyledImage.propTypes = {
+  src: PropTypes.string.isRequired, // `src` must be a string and is required
+  alt: PropTypes.string.isRequired, // `alt` must be a string and is required
+  className: PropTypes.string, // `className` must be a string
+};
 
 const NewsletterSection = () => {
   const handleSubmit = (e) => {

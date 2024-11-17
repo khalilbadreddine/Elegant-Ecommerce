@@ -1,4 +1,3 @@
-import React from "react";
 import { Instagram, Facebook, YouTube } from "./Icons";
 
 const Footer = () => {
