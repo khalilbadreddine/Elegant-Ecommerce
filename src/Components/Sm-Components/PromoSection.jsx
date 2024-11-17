@@ -10,7 +10,7 @@ const PromoSection = () => {
           <img
             src="/assets/promo.jpeg"
             alt="Promotional Content"
-            className="w-full h-auto object-cover max-w-md sm:max-w-lg lg:max-w-full mx-auto"
+            className="w-full h-auto object-cover"
           />
         </div>
 
@@ -20,7 +20,7 @@ const PromoSection = () => {
             SALE UP TO 35% OFF
           </p>
           <h1 className="text-gray-800 font-bold text-2xl lg:text-4xl mt-2 leading-tight">
-            HUNDREDS of New Lower Prices!
+            HUNDREDS of <br /> New Lower Prices!
           </h1>
           <p className="text-gray-600 mt-4 text-sm lg:text-base leading-relaxed">
             It’s more affordable than ever to give every room in your home a
