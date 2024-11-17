@@ -111,14 +111,22 @@ const NewArrival = () => {
   };
 
   return (
-    <div
-      ref={sliderContainerRef}
-      className="w-full mb-20 max-w-6xl mx-auto p-4"
-    >
-      <h2 className="text-2xl font-bold mb-4">
-        New <br />
-        Arrivals:
-      </h2>
+    <div ref={sliderContainerRef} className="w-full mb-4 max-w-6xl mx-auto p-4">
+      {/* Header with New Arrivals */}
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-3xl md:text-5xl font-bold">
+          New <br />
+          Arrivals:
+        </h2>
+        {/* More Products Link (Desktop) */}
+        <a
+          href="#"
+          className="hidden sm:inline-block text-md text-black hover:underline hover:text-gray transition-all"
+        >
+          More Products →
+        </a>
+      </div>
+
       <div className="relative">
         {/* Slider */}
         <Slider {...settings}>
@@ -141,6 +149,16 @@ const NewArrival = () => {
             style={{ width: `${progress}%` }}
           ></div>
         </div>
+      </div>
+
+      {/* More Products Link (Mobile) */}
+      <div className="sm:hidden mt-4">
+        <a
+          href="#"
+          className="text-md text-gray-700  hover:underline hover:text-black transition-all"
+        >
+          More Products →
+        </a>
       </div>
     </div>
   );

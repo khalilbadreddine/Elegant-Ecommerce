@@ -150,6 +150,108 @@ export const Profile = () => (
     />
   </svg>
 );
+
+export const TruckIcon = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 48 48"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M28 38V14M28 38H32M28 38H18M28 14C28 9.58172 24.4183 6 20 6H12C7.58172 6 4 9.58172 4 14V30C4 33.7304 6.55333 36.8645 10.0077 37.7499M28 14H34.4182C35.4344 14 36.4126 14.3868 37.154 15.0819L42.7358 20.3148C43.5424 21.071 44 22.1273 44 23.2329V34C44 36.2091 42.2091 38 40 38M40 38C40 40.2091 38.2091 42 36 42C33.7909 42 32 40.2091 32 38M40 38C40 35.7909 38.2091 34 36 34C33.7909 34 32 35.7909 32 38M18 38C18 40.2091 16.2091 42 14 42C11.7909 42 10 40.2091 10 38C10 37.916 10.0026 37.8326 10.0077 37.7499M18 38C18 35.7909 16.2091 34 14 34C11.8748 34 10.1368 35.6573 10.0077 37.7499"
+      stroke="#141718"
+      strokeWidth="2.5"
+    />
+    <path
+      d="M20 16H16"
+      stroke="#141718"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M20 24H12"
+      stroke="#141718"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const MoneyIcon = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 48 48"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect
+      x="4"
+      y="8"
+      width="40"
+      height="32"
+      rx="4"
+      stroke="#141718"
+      strokeWidth="2.5"
+    />
+    <circle
+      cx="4"
+      cy="4"
+      r="4"
+      transform="matrix(1 0 0 -1 20 28)"
+      stroke="#141718"
+      strokeWidth="2.5"
+    />
+    <circle
+      cx="2"
+      cy="2"
+      r="2"
+      transform="matrix(1 0 0 -1 34 26)"
+      fill="#141718"
+    />
+    <circle
+      cx="2"
+      cy="2"
+      r="2"
+      transform="matrix(1 0 0 -1 10 26)"
+      fill="#141718"
+    />
+  </svg>
+);
+
+export const LockIcon = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 48 48"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M32 16H16M32 16C36.4183 16 40 19.5817 40 24V36C40 40.4183 36.4183 44 32 44H16C11.5817 44 8 40.4183 8 36V24C8 19.5817 11.5817 16 16 16M32 16V12C32 7.58172 28.4183 4 24 4C19.5817 4 16 7.58172 16 12V16M24 32V28"
+      stroke="#141718"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+export const PhoneIcon = ({ className }) => (
+  <svg
+    className={className}
+    viewBox="0 0 40 40"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M38 34V30.7081C38 29.0725 37.0042 27.6017 35.4856 26.9942L31.4173 25.3669C29.4857 24.5943 27.2844 25.4312 26.354 27.292L26 28C26 28 21 27 17 23C13 19 12 14 12 14L12.708 13.646C14.5688 12.7156 15.4057 10.5143 14.6331 8.58271L13.0058 4.51444C12.3983 2.99581 10.9275 2 9.29187 2H6C3.79086 2 2 3.79086 2 6C2 23.6731 16.3269 38 34 38C36.2091 38 38 36.2091 38 34Z"
+      stroke="#141718"
+      strokeWidth="2.5"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 export const FiveStars = () => {
   return (
     <svg
