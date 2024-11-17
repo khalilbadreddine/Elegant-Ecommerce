@@ -8,6 +8,7 @@ import Resizable from "./Sm-Components/Resizable";
 import NewArrival from "./Sm-Components/NewArrival";
 import ProductCard from "./Sm-Components/ProductCard";
 import FeaturesSection from "./Sm-Components/FeaturesSection";
+import PromoSection from "./Sm-Components/PromoSection";
 
 const Main = () => {
   return (
@@ -21,6 +22,7 @@ const Main = () => {
         <CategorySection />
         <NewArrival />
         <FeaturesSection />
+        <PromoSection />
       </div>
     </>
   );
