@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable no-unused-vars */
+import { useState } from "react";
 import NewArrival from "./NewArrival";
 
 function Resizable() {

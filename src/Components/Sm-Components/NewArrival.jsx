@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -90,7 +90,7 @@ const NewArrival = () => {
     return () => {
       window.removeEventListener("resize", calculateSlidesToShow); // Cleanup on unmount
     };
-  }, []);
+  });
 
   const settings = {
     dots: false,
