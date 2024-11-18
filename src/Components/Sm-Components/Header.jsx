@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom"; // Import NavLink
+import { NavLink, useNavigate } from "react-router-dom";
+// Import NavLink
 import { Cart, Hamburger, Search, Profile } from "./Icons";
 import Sidebar from "./Sidebar";
+import { isAuthenticated } from "../utils/auth";
 
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const navigate = useNavigate();
 
   const openSidebar = () => setIsSidebarOpen(true);
   const closeSidebar = () => setIsSidebarOpen(false);
@@ -40,7 +43,16 @@ const Header = () => {
         <div className="hidden md:block w-5 h-5 rounded-full">
           <Search />
         </div>
-        <div className="hidden md:block w-5 h-5 rounded-full">
+        <div
+          className="hidden md:block w-5 h-5 rounded-full cursor-pointer"
+          onClick={() => {
+            if (!isAuthenticated()) {
+              navigate("/signin"); // Redirect to Sign In
+            } else {
+              navigate("/profile"); // Redirect to Profile/Dashboard
+            }
+          }}
+        >
           <Profile />
         </div>
         <div className="relative">

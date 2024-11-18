@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom"; // Import NavLink
+import { NavLink, useNavigate } from "react-router-dom"; // Import NavLink
 import {
   Cart,
   Close,
@@ -10,8 +10,11 @@ import {
   Facebook,
   YouTube,
 } from "./Icons";
+import { isAuthenticated } from "../utils/auth";
 
 const Sidebar = ({ isOpen, onClose }) => {
+  const navigate = useNavigate();
+
   return (
     <div
       className={`fixed top-0 left-0 h-full w-[60%] bg-white shadow-lg z-50 flex flex-col ${
@@ -78,7 +81,16 @@ const Sidebar = ({ isOpen, onClose }) => {
         </div>
 
         {/* Sign In Button */}
-        <button className="w-full bg-black text-white py-2 rounded-lg">
+        <button
+          onClick={() => {
+            if (!isAuthenticated()) {
+              navigate("/signin"); // Redirect to Sign In page
+            } else {
+              alert("You are already logged in!"); // Optional feedback
+            }
+          }}
+          className="w-full bg-black text-white py-2 rounded-lg"
+        >
           Sign In
         </button>
 
