@@ -1,4 +1,5 @@
-// src/components/Sidebar.jsx
+import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom"; // Import NavLink
 import {
   Cart,
   Close,
@@ -8,7 +9,7 @@ import {
   Instagram,
   Facebook,
   YouTube,
-} from "./Icons"; // Import all icons
+} from "./Icons";
 
 const Sidebar = ({ isOpen, onClose }) => {
   return (
@@ -39,24 +40,24 @@ const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Navigation Links with Lines Between */}
       <nav className="px-4 py-4 text-gray-700 text-sm flex-grow">
-        <a href="#home" className="block py-3 border-b border-gray-200">
+        <NavLink to="/" className="block py-3 border-b border-gray-200">
           Home
-        </a>
+        </NavLink>
         <div className="flex justify-between items-center py-3 border-b border-gray-200">
-          <a href="#shop" className="block">
+          <NavLink to="/shop" className="block">
             Shop
-          </a>
+          </NavLink>
           <Dropdown className="w-3 h-3" />
         </div>
         <div className="flex justify-between items-center py-3 border-b border-gray-200">
-          <a href="#product" className="block">
+          <NavLink to="/product" className="block">
             Product
-          </a>
+          </NavLink>
           <Dropdown className="w-3 h-3" />
         </div>
-        <a href="#contact" className="block py-3 border-b border-gray-200">
+        <NavLink to="/contact" className="block py-3 border-b border-gray-200">
           Contact Us
-        </a>
+        </NavLink>
       </nav>
 
       {/* Bottom Section with Cart, Wishlist, Sign In, and Social Media Icons */}
@@ -90,6 +91,12 @@ const Sidebar = ({ isOpen, onClose }) => {
       </div>
     </div>
   );
+};
+
+// Prop validation
+Sidebar.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default Sidebar;
