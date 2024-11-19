@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { NavLink, useNavigate } from "react-router-dom"; // Import NavLink
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Cart,
   Close,
@@ -10,10 +10,28 @@ import {
   Facebook,
   YouTube,
 } from "./Icons";
-import { isAuthenticated } from "../utils/auth";
+import { isAuthenticated, signOut } from "../utils/auth";
 
-const Sidebar = ({ isOpen, onClose }) => {
+const Sidebar = ({
+  isOpen,
+  onClose,
+  cartCount,
+  wishlistCount,
+  onCartClick,
+}) => {
   const navigate = useNavigate();
+
+  // Handle Sign-In or Sign-Out action
+  const handleSignInOrOut = () => {
+    if (isAuthenticated()) {
+      signOut(); // Remove the token to sign out
+      alert("You have been logged out.");
+      navigate("/signin");
+    } else {
+      navigate("/signin"); // Redirect to Sign In page
+    }
+    onClose(); // Close sidebar after action
+  };
 
   return (
     <div
@@ -43,55 +61,72 @@ const Sidebar = ({ isOpen, onClose }) => {
 
       {/* Navigation Links with Lines Between */}
       <nav className="px-4 py-4 text-gray-700 text-sm flex-grow">
-        <NavLink to="/" className="block py-3 border-b border-gray-200">
+        <NavLink
+          to="/"
+          className="block py-3 border-b border-gray-200"
+          onClick={onClose}
+        >
           Home
         </NavLink>
-        <div className="flex justify-between items-center py-3 border-b border-gray-200">
+        <div
+          className="flex justify-between items-center py-3 border-b border-gray-200"
+          onClick={onClose}
+        >
           <NavLink to="/shop" className="block">
             Shop
           </NavLink>
           <Dropdown className="w-3 h-3" />
         </div>
-        <div className="flex justify-between items-center py-3 border-b border-gray-200">
+        <div
+          className="flex justify-between items-center py-3 border-b border-gray-200"
+          onClick={onClose}
+        >
           <NavLink to="/product" className="block">
             Product
           </NavLink>
           <Dropdown className="w-3 h-3" />
         </div>
-        <NavLink to="/contact" className="block py-3 border-b border-gray-200">
+        <NavLink
+          to="/contact"
+          className="block py-3 border-b border-gray-200"
+          onClick={onClose}
+        >
           Contact Us
         </NavLink>
       </nav>
 
       {/* Bottom Section with Cart, Wishlist, Sign In, and Social Media Icons */}
       <div className="p-4 border-t border-gray-200 space-y-4 text-sm">
-        <div className="flex justify-between items-center">
+        {/* Cart Button */}
+        <div
+          className="flex justify-between items-center cursor-pointer"
+          onClick={() => {
+            onCartClick(); // Open Cart Sidebar
+            onClose(); // Close Sidebar
+          }}
+        >
           <span>Cart</span>
           <div className="flex items-center space-x-2">
             <Cart className="w-5 h-5" />
-            <span>2</span>
+            <span>{cartCount}</span> {/* Dynamic Cart Count */}
           </div>
         </div>
+
+        {/* Wishlist */}
         <div className="flex justify-between items-center">
           <span>Wishlist</span>
           <div className="flex items-center space-x-2">
             <Wishlist className="w-5 h-5" />
-            <span>2</span>
+            <span>{wishlistCount}</span>
           </div>
         </div>
 
-        {/* Sign In Button */}
+        {/* Sign In/Sign Out Button */}
         <button
-          onClick={() => {
-            if (!isAuthenticated()) {
-              navigate("/signin"); // Redirect to Sign In page
-            } else {
-              alert("You are already logged in!"); // Optional feedback
-            }
-          }}
+          onClick={handleSignInOrOut}
           className="w-full bg-black text-white py-2 rounded-lg"
         >
-          Sign In
+          {isAuthenticated() ? "Sign Out" : "Sign In"}
         </button>
 
         {/* Social Media Icons */}
@@ -107,8 +142,11 @@ const Sidebar = ({ isOpen, onClose }) => {
 
 // Prop validation
 Sidebar.propTypes = {
-  isOpen: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
+  isOpen: PropTypes.bool.isRequired, // Determines if the sidebar is open
+  onClose: PropTypes.func.isRequired, // Callback to close the sidebar
+  cartCount: PropTypes.number.isRequired, // Number of items in the cart
+  wishlistCount: PropTypes.number.isRequired, // Number of items in the wishlist
+  onCartClick: PropTypes.func.isRequired, // Callback to open the cart sidebar
 };
 
 export default Sidebar;

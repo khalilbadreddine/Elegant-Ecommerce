@@ -6,7 +6,6 @@ import NewArrival from "../Sm-Components/NewArrival";
 import FeaturesSection from "../Sm-Components/FeaturesSection";
 import PromoSection from "../Sm-Components/PromoSection";
 import ArticlesSection from "../Sm-Components/ArticlesSection";
-import NewsletterSection from "../Sm-Components/NewsletterSection";
 
 const Home = () => {
   return (
@@ -19,7 +18,6 @@ const Home = () => {
         <FeaturesSection />
         <PromoSection />
         <ArticlesSection />
-        <NewsletterSection />
       </div>
     </>
   );

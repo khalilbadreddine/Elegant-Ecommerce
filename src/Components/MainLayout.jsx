@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import Header from "./Sm-Components/Header";
 import Footer from "./Sm-Components/Footer";
 import AnnouncementBar from "./Sm-Components/AnnouncementBar";
-
+import NewsletterSection from "./Sm-Components/NewsletterSection";
 const Main = () => {
   return (
     <>
@@ -13,6 +13,7 @@ const Main = () => {
         {/* Outlet for rendering child routes */}
         <Outlet />
       </div>
+      <NewsletterSection />
       <Footer />
     </>
   );

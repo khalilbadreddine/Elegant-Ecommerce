@@ -18,26 +18,30 @@ const InputWithIcon = ({ id, name, icon: Icon, placeholder }) => (
 
 // Prop validation for InputWithIcon
 InputWithIcon.propTypes = {
-  id: PropTypes.string.isRequired, // `id` must be a string and is required
-  name: PropTypes.string.isRequired, // `name` must be a string and is required
-  icon: PropTypes.elementType.isRequired, // `icon` must be a React component (function or class)
-  placeholder: PropTypes.string, // `placeholder` must be a string
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.elementType.isRequired,
+  placeholder: PropTypes.string,
 };
 
 const StyledImage = ({ src, alt, className }) => (
-  <img
-    src={src}
-    alt={alt}
-    className={`w-auto h-[350px] object-cover transform scale-125 ${className}`}
-    loading="lazy"
-  />
+  <div
+    className={`relative w-full max-w-[400px] md:max-w-[500px] aspect-square ${className}`}
+  >
+    <img
+      src={src}
+      alt={alt}
+      className="absolute inset-0 w-full h-full object-cover rounded-lg"
+      loading="lazy"
+    />
+  </div>
 );
 
 // Prop validation for StyledImage
 StyledImage.propTypes = {
-  src: PropTypes.string.isRequired, // `src` must be a string and is required
-  alt: PropTypes.string.isRequired, // `alt` must be a string and is required
-  className: PropTypes.string, // `className` must be a string
+  src: PropTypes.string.isRequired,
+  alt: PropTypes.string.isRequired,
+  className: PropTypes.string,
 };
 
 const NewsletterSection = () => {
@@ -52,11 +56,11 @@ const NewsletterSection = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between p-4 md:p-0 overflow-hidden bg-gray-100">
+    <div className="flex flex-col md:flex-row items-center justify-between p-4 md:p-0 bg-gray-100 gap-4">
       <StyledImage
-        src="/assets/plakar2.png"
+        src="/assets/couch-gray.png"
         alt="Left side"
-        className="-translate-x-16 hidden md:block flex-1"
+        className="hidden md:block"
       />
 
       <div className="flex flex-col items-center justify-center flex-1 px-10 py-10">
@@ -90,7 +94,7 @@ const NewsletterSection = () => {
       <StyledImage
         src="/assets/couch2.png"
         alt="Right side"
-        className="translate-x-16 hidden md:block"
+        className="hidden md:block"
       />
     </div>
   );
