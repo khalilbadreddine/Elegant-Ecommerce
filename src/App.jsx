@@ -9,33 +9,36 @@ import SignIn from "./Components/Pages/SignIn";
 import SignUp from "./Components/Pages/SignUp";
 import Profile from "./Components/Pages/Profile"; // Profile page
 import ProtectedRoute from "./Components/Sm-Components/ProtectedRoute";
+import { CartProvider } from "./Components/contexts/CartProvider"; // Import CartProvider
 
 function App() {
   return (
     <Router>
-      <Routes>
-        {/* Main layout with nested routes */}
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
-          <Route path="shop" element={<Shop />} />
-          <Route path="product" element={<Product />} />
-          <Route path="contact" element={<Contact />} />
-        </Route>
+      <CartProvider>
+        <Routes>
+          {/* Main layout with nested routes */}
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<Home />} />
+            <Route path="shop" element={<Shop />} />
+            <Route path="product" element={<Product />} />
+            <Route path="contact" element={<Contact />} />
+          </Route>
 
-        {/* Standalone routes */}
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/signup" element={<SignUp />} />
+          {/* Standalone routes */}
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
 
-        {/* Protected routes */}
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+          {/* Protected routes */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </CartProvider>
     </Router>
   );
 }

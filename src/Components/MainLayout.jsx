@@ -1,10 +1,11 @@
-// src/Main.jsx
+// src/Components/MainLayout.jsx
 import { Outlet } from "react-router-dom";
 import Header from "./Sm-Components/Header";
 import Footer from "./Sm-Components/Footer";
 import AnnouncementBar from "./Sm-Components/AnnouncementBar";
 import NewsletterSection from "./Sm-Components/NewsletterSection";
-const Main = () => {
+
+const MainLayout = () => {
   return (
     <>
       <AnnouncementBar />
@@ -19,4 +20,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default MainLayout;

@@ -1,3 +1,5 @@
+// src/Components/Sm-Components/Sidebar.jsx
+import { useContext } from "react";
 import PropTypes from "prop-types";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
@@ -11,15 +13,12 @@ import {
   YouTube,
 } from "./Icons";
 import { isAuthenticated, signOut } from "../utils/auth";
+import { CartContext } from "../contexts/CartContext";
 
-const Sidebar = ({
-  isOpen,
-  onClose,
-  cartCount,
-  wishlistCount,
-  onCartClick,
-}) => {
+const Sidebar = ({ isOpen, onClose, wishlistCount, onCartClick }) => {
   const navigate = useNavigate();
+  const { cartItems } = useContext(CartContext);
+  const cartCount = cartItems.length;
 
   // Handle Sign-In or Sign-Out action
   const handleSignInOrOut = () => {
@@ -144,7 +143,6 @@ const Sidebar = ({
 Sidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired, // Determines if the sidebar is open
   onClose: PropTypes.func.isRequired, // Callback to close the sidebar
-  cartCount: PropTypes.number.isRequired, // Number of items in the cart
   wishlistCount: PropTypes.number.isRequired, // Number of items in the wishlist
   onCartClick: PropTypes.func.isRequired, // Callback to open the cart sidebar
 };

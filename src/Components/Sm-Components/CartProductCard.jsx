@@ -1,6 +1,9 @@
+/* eslint-disable no-unused-vars */
+// src/Components/Sm-Components/CartProductCard.jsx
 import PropTypes from "prop-types";
 
 const CartProductCard = ({
+  productId,
   image,
   title,
   color,
@@ -56,13 +59,15 @@ const CartProductCard = ({
 
 // PropTypes for validation
 CartProductCard.propTypes = {
-  image: PropTypes.string.isRequired, // URL for the product image
-  title: PropTypes.string.isRequired, // Product title
-  color: PropTypes.string.isRequired, // Product color
-  price: PropTypes.number.isRequired, // Product price
-  quantity: PropTypes.number.isRequired, // Quantity of the product
-  onRemove: PropTypes.func.isRequired, // Function to remove the product
-  onQuantityChange: PropTypes.func.isRequired, // Function to change product quantity
+  productId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
+  image: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  quantity: PropTypes.number.isRequired,
+  onRemove: PropTypes.func.isRequired,
+  onQuantityChange: PropTypes.func.isRequired,
 };
 
 export default CartProductCard;

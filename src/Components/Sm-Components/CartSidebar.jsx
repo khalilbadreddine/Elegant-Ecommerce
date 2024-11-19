@@ -1,13 +1,12 @@
+// src/Components/Sm-Components/CartSidebar.jsx
+import { useContext } from "react";
 import PropTypes from "prop-types";
 import CartProductCard from "./CartProductCard";
+import { CartContext } from "../contexts/CartContext";
 
-const CartSidebar = ({
-  isOpen,
-  onClose,
-  cartItems,
-  onRemoveItem,
-  onQuantityChange,
-}) => {
+const CartSidebar = ({ isOpen, onClose }) => {
+  const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext);
+
   // Calculate Subtotal
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
@@ -40,17 +39,18 @@ const CartSidebar = ({
 
         {/* Cart Items Section */}
         <div className="flex-1 overflow-y-auto p-4">
-          {cartItems.map((item, index) => (
+          {cartItems.map((item) => (
             <CartProductCard
-              key={index}
+              key={item.id}
+              productId={item.id}
               image={item.image}
               title={item.title}
               color={item.color}
               price={item.price}
               quantity={item.quantity}
-              onRemove={() => onRemoveItem(index)}
+              onRemove={() => removeFromCart(item.id)}
               onQuantityChange={(newQuantity) =>
-                onQuantityChange(index, newQuantity)
+                updateQuantity(item.id, newQuantity)
               }
             />
           ))}
@@ -86,19 +86,8 @@ const CartSidebar = ({
 
 // PropTypes for validation
 CartSidebar.propTypes = {
-  isOpen: PropTypes.bool.isRequired, // `isOpen` must be a boolean and required
-  onClose: PropTypes.func.isRequired, // `onClose` must be a function and required
-  cartItems: PropTypes.arrayOf(
-    PropTypes.shape({
-      image: PropTypes.string.isRequired, // Product image URL
-      title: PropTypes.string.isRequired, // Product title
-      color: PropTypes.string.isRequired, // Product color
-      price: PropTypes.number.isRequired, // Product price
-      quantity: PropTypes.number.isRequired, // Product quantity
-    })
-  ).isRequired, // Array of cart items
-  onRemoveItem: PropTypes.func.isRequired, // Function to remove an item
-  onQuantityChange: PropTypes.func.isRequired, // Function to change item quantity
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
 };
 
 export default CartSidebar;
