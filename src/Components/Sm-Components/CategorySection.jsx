@@ -1,4 +1,3 @@
-import React from "react";
 import couchGray from "/assets/couch-gray.png";
 import plakar from "/assets/plakar.png";
 import toast from "/assets/toast.png";

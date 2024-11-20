@@ -1,6 +1,6 @@
 // src/Components/ProtectedRoute.jsx
 import { Navigate } from "react-router-dom";
-import { isAuthenticated } from "../utils/auth";
+import { isAuthenticated } from "../../utils/auth";
 import PropTypes from "prop-types";
 
 const ProtectedRoute = ({ children }) => {

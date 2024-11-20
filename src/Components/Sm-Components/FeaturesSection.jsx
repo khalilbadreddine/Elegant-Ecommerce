@@ -1,4 +1,3 @@
-import React from "react";
 import { TruckIcon, MoneyIcon, LockIcon, PhoneIcon } from "./Icons";
 
 const features = [

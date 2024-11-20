@@ -2,15 +2,13 @@ import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { Snackbar, Alert } from "@mui/material";
-import CartProductCard from "./CartProductCard";
-import {
-  removeFromCart,
-  updateCartQuantity,
-} from "../../redux/actions/cartActions";
+import WishlistProductCard from "./WishlistProductCard";
+import { removeFromWishlist } from "../../redux/actions/wishlistActions";
+import { addToCart } from "../../redux/actions/cartActions";
 
-const CartSidebar = ({ isOpen, onClose }) => {
+const WishlistSidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart.cartItems);
+  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
 
   // Snackbar state
   const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -21,24 +19,27 @@ const CartSidebar = ({ isOpen, onClose }) => {
     setSnackbarOpen(false);
   };
 
-  // Calculate Subtotal
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  // Function to add all wishlist items to the cart
+  const addAllToCart = () => {
+    wishlistItems.forEach((item) => dispatch(addToCart(item)));
+    setSnackbarMessage("All wishlist items added to cart");
+    setSnackbarSeverity("success");
+    setSnackbarOpen(true);
+    onClose();
+  };
 
-  // Handle quantity change
-  const handleQuantityChange = (productId, newQuantity) => {
-    dispatch(updateCartQuantity(productId, newQuantity));
-    setSnackbarMessage("Cart updated");
+  // Function to add individual item to cart
+  const handleAddToCart = (item) => {
+    dispatch(addToCart(item));
+    setSnackbarMessage(`${item.title} added to cart`);
     setSnackbarSeverity("success");
     setSnackbarOpen(true);
   };
 
-  // Handle item removal
-  const handleRemoveFromCart = (productId) => {
-    dispatch(removeFromCart(productId));
-    setSnackbarMessage("Item removed from cart");
+  // Function to remove item from wishlist
+  const handleRemoveFromWishlist = (itemId) => {
+    dispatch(removeFromWishlist(itemId));
+    setSnackbarMessage("Item removed from wishlist");
     setSnackbarSeverity("info");
     setSnackbarOpen(true);
   };
@@ -61,52 +62,45 @@ const CartSidebar = ({ isOpen, onClose }) => {
       >
         {/* Header */}
         <div className="p-4 flex justify-between items-center border-b">
-          <h2 className="text-lg font-bold">Cart</h2>
+          <h2 className="text-lg font-bold">Wishlist</h2>
           <button onClick={onClose} className="text-gray-600">
             ✕
           </button>
         </div>
 
-        {/* Cart Items Section */}
+        {/* Wishlist Items */}
         <div className="flex-1 overflow-y-auto p-4">
-          {cartItems.map((item) => (
-            <CartProductCard
+          {wishlistItems.map((item) => (
+            <WishlistProductCard
               key={item.id}
               productId={item.id}
               image={item.image}
               title={item.title}
-              color={item.color}
+              color={item.color || "Default"}
               price={item.price}
-              quantity={item.quantity}
-              onRemove={() => handleRemoveFromCart(item.id)}
-              onQuantityChange={(newQuantity) =>
-                handleQuantityChange(item.id, newQuantity)
-              }
+              onRemove={() => handleRemoveFromWishlist(item.id)}
+              onAddToCart={() => handleAddToCart(item)}
             />
           ))}
-          {cartItems.length === 0 && (
-            <p className="text-gray-600">Your cart is empty.</p>
+          {wishlistItems.length === 0 && (
+            <p className="text-gray-600">Your wishlist is empty.</p>
           )}
         </div>
 
-        {/* Footer Section */}
+        {/* Footer */}
         <div className="p-4 border-t bg-white">
-          <div className="flex justify-between mb-2">
-            <p>Subtotal</p>
-            <p>${subtotal.toFixed(2)}</p>
-          </div>
-          <div className="flex justify-between font-bold text-lg">
-            <p>Total</p>
-            <p>${subtotal.toFixed(2)}</p>
-          </div>
-          <button className="w-full bg-black text-white py-2 mt-4">
-            Checkout
+          <button
+            onClick={addAllToCart}
+            className="w-full bg-black text-white py-2 mt-4"
+            disabled={wishlistItems.length === 0}
+          >
+            Add All to Cart
           </button>
           <button
             onClick={onClose}
             className="w-full bg-gray-200 text-black py-2 mt-2"
           >
-            View Cart
+            Close Wishlist
           </button>
         </div>
       </div>
@@ -130,9 +124,9 @@ const CartSidebar = ({ isOpen, onClose }) => {
   );
 };
 
-CartSidebar.propTypes = {
+WishlistSidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 };
 
-export default CartSidebar;
+export default WishlistSidebar;

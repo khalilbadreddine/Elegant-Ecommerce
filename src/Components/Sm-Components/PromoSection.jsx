@@ -1,5 +1,3 @@
-import React from "react";
-
 const PromoSection = () => {
   return (
     <div className="bg-gray-100 mb-5">

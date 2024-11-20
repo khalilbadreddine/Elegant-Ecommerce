@@ -1,35 +1,34 @@
-// src/Components/Sm-Components/Sidebar.jsx
-import { useContext } from "react";
+import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { NavLink, useNavigate } from "react-router-dom";
 import {
   Cart,
   Close,
   Search,
-  Dropdown,
   Wishlist,
   Instagram,
   Facebook,
   YouTube,
 } from "./Icons";
-import { isAuthenticated, signOut } from "../utils/auth";
-import { CartContext } from "../contexts/CartContext";
+import { isAuthenticated, signOut } from "../../utils/auth";
 
-const Sidebar = ({ isOpen, onClose, wishlistCount, onCartClick }) => {
+const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
   const navigate = useNavigate();
-  const { cartItems } = useContext(CartContext);
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
   const cartCount = cartItems.length;
+  const wishlistCount = wishlistItems.length;
 
   // Handle Sign-In or Sign-Out action
   const handleSignInOrOut = () => {
     if (isAuthenticated()) {
-      signOut(); // Remove the token to sign out
+      signOut();
       alert("You have been logged out.");
       navigate("/signin");
     } else {
-      navigate("/signin"); // Redirect to Sign In page
+      navigate("/signin");
     }
-    onClose(); // Close sidebar after action
+    onClose();
   };
 
   return (
@@ -38,7 +37,7 @@ const Sidebar = ({ isOpen, onClose, wishlistCount, onCartClick }) => {
         isOpen ? "translate-x-0" : "-translate-x-full"
       } transition-transform duration-300`}
     >
-      {/* Header with Logo and Close Button */}
+      {/* Header */}
       <div className="p-4 flex justify-between items-center border-b border-gray-200">
         <div className="text-lg font-bold">3legant.</div>
         <button onClick={onClose}>
@@ -58,7 +57,7 @@ const Sidebar = ({ isOpen, onClose, wishlistCount, onCartClick }) => {
         </div>
       </div>
 
-      {/* Navigation Links with Lines Between */}
+      {/* Navigation Links */}
       <nav className="px-4 py-4 text-gray-700 text-sm flex-grow">
         <NavLink
           to="/"
@@ -67,24 +66,20 @@ const Sidebar = ({ isOpen, onClose, wishlistCount, onCartClick }) => {
         >
           Home
         </NavLink>
-        <div
-          className="flex justify-between items-center py-3 border-b border-gray-200"
+        <NavLink
+          to="/shop"
+          className="block py-3 border-b border-gray-200"
           onClick={onClose}
         >
-          <NavLink to="/shop" className="block">
-            Shop
-          </NavLink>
-          <Dropdown className="w-3 h-3" />
-        </div>
-        <div
-          className="flex justify-between items-center py-3 border-b border-gray-200"
+          Shop
+        </NavLink>
+        <NavLink
+          to="/product"
+          className="block py-3 border-b border-gray-200"
           onClick={onClose}
         >
-          <NavLink to="/product" className="block">
-            Product
-          </NavLink>
-          <Dropdown className="w-3 h-3" />
-        </div>
+          Product
+        </NavLink>
         <NavLink
           to="/contact"
           className="block py-3 border-b border-gray-200"
@@ -94,25 +89,31 @@ const Sidebar = ({ isOpen, onClose, wishlistCount, onCartClick }) => {
         </NavLink>
       </nav>
 
-      {/* Bottom Section with Cart, Wishlist, Sign In, and Social Media Icons */}
+      {/* Bottom Section */}
       <div className="p-4 border-t border-gray-200 space-y-4 text-sm">
-        {/* Cart Button */}
+        {/* Cart */}
         <div
           className="flex justify-between items-center cursor-pointer"
           onClick={() => {
-            onCartClick(); // Open Cart Sidebar
-            onClose(); // Close Sidebar
+            onCartClick();
+            onClose();
           }}
         >
           <span>Cart</span>
           <div className="flex items-center space-x-2">
             <Cart className="w-5 h-5" />
-            <span>{cartCount}</span> {/* Dynamic Cart Count */}
+            <span>{cartCount}</span>
           </div>
         </div>
 
         {/* Wishlist */}
-        <div className="flex justify-between items-center">
+        <div
+          className="flex justify-between items-center cursor-pointer"
+          onClick={() => {
+            onWishlistClick();
+            onClose();
+          }}
+        >
           <span>Wishlist</span>
           <div className="flex items-center space-x-2">
             <Wishlist className="w-5 h-5" />
@@ -120,7 +121,7 @@ const Sidebar = ({ isOpen, onClose, wishlistCount, onCartClick }) => {
           </div>
         </div>
 
-        {/* Sign In/Sign Out Button */}
+        {/* Sign In/Out */}
         <button
           onClick={handleSignInOrOut}
           className="w-full bg-black text-white py-2 rounded-lg"
@@ -139,12 +140,11 @@ const Sidebar = ({ isOpen, onClose, wishlistCount, onCartClick }) => {
   );
 };
 
-// Prop validation
 Sidebar.propTypes = {
-  isOpen: PropTypes.bool.isRequired, // Determines if the sidebar is open
-  onClose: PropTypes.func.isRequired, // Callback to close the sidebar
-  wishlistCount: PropTypes.number.isRequired, // Number of items in the wishlist
-  onCartClick: PropTypes.func.isRequired, // Callback to open the cart sidebar
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onCartClick: PropTypes.func.isRequired,
+  onWishlistClick: PropTypes.func.isRequired,
 };
 
 export default Sidebar;

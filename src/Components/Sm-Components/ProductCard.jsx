@@ -1,21 +1,61 @@
-// src/Components/Sm-Components/ProductCard.jsx
-import { useContext } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { CartContext } from "../contexts/CartContext";
+import { useState } from "react";
+import { Snackbar, Alert } from "@mui/material";
+import { addToCart } from "../../redux/actions/cartActions";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../../redux/actions/wishlistActions";
 import { HeartIcon, FiveStars } from "./Icons";
 
 const ProductCard = ({ id, img, name, price, originalPrice }) => {
-  const { addToCart } = useContext(CartContext);
+  const dispatch = useDispatch();
+  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
+  const isInWishlist = wishlistItems.some((item) => item.id === id);
 
+  // Snackbar state
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  // Add to Cart
   const handleAddToCart = () => {
     const product = {
       id,
       image: img,
       title: name,
       price: parseFloat(price),
-      color: "Default", // Update this as necessary
+      color: "Default",
     };
-    addToCart(product);
+    dispatch(addToCart(product));
+    setSnackbarMessage("Product added to cart");
+    setSnackbarSeverity("success");
+    setSnackbarOpen(true);
+  };
+
+  // Toggle Wishlist
+  const handleWishlistToggle = () => {
+    const product = {
+      id,
+      image: img,
+      title: name,
+      price: parseFloat(price),
+    };
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(id));
+      setSnackbarMessage("Removed from wishlist");
+      setSnackbarSeverity("info");
+    } else {
+      dispatch(addToWishlist(product));
+      setSnackbarMessage("Added to wishlist");
+      setSnackbarSeverity("success");
+    }
+    setSnackbarOpen(true);
   };
 
   return (
@@ -31,8 +71,11 @@ const ProductCard = ({ id, img, name, price, originalPrice }) => {
       </div>
 
       {/* Heart Icon */}
-      <button className="absolute top-3 right-3 z-10 bg-white p-2 sm:p-2.5 rounded-full shadow-md text-gray-400 hover:text-red-500 hover:shadow-lg transition-all ">
-        <HeartIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+      <button
+        className="absolute top-3 right-3 z-10 bg-white p-2 sm:p-2.5 rounded-full shadow-md hover:shadow-lg transition-all"
+        onClick={handleWishlistToggle}
+      >
+        <HeartIcon color={isInWishlist ? "red" : "#6C7275"} />
       </button>
 
       <div className="relative w-full h-[260px] sm:h-[320px] bg-gray-200">
@@ -62,6 +105,22 @@ const ProductCard = ({ id, img, name, price, originalPrice }) => {
           </span>
         </div>
       </div>
+
+      {/* Snackbar */}
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
