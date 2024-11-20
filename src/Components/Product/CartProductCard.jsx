@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-// src/Components/Sm-Components/CartProductCard.jsx
 import PropTypes from "prop-types";
 
 const CartProductCard = ({
@@ -13,7 +11,10 @@ const CartProductCard = ({
   onQuantityChange,
 }) => {
   return (
-    <div className="flex items-center space-x-4 mb-4 border-b pb-4">
+    <div
+      key={productId}
+      className="flex items-center space-x-4 mb-4 border-b pb-4"
+    >
       {/* Product Image */}
       <img
         src={image}
@@ -57,7 +58,6 @@ const CartProductCard = ({
   );
 };
 
-// PropTypes for validation
 CartProductCard.propTypes = {
   productId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     .isRequired,

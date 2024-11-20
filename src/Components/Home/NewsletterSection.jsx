@@ -1,5 +1,5 @@
 import PropTypes from "prop-types"; // Import PropTypes
-import { MailIcon } from "./Icons";
+import { MailIcon } from "../Common/Icons";
 
 const InputWithIcon = ({ id, name, icon: Icon, placeholder }) => (
   <div className="flex items-center w-full">

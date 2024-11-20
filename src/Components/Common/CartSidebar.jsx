@@ -1,8 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { Snackbar, Alert } from "@mui/material";
-import CartProductCard from "./CartProductCard";
+import { Snackbar, Alert, useMediaQuery } from "@mui/material";
+import CartProductCard from "../Product/CartProductCard";
 import {
   removeFromCart,
   updateCartQuantity,
@@ -16,6 +16,9 @@ const CartSidebar = ({ isOpen, onClose }) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  // Responsive breakpoint
+  const isMobile = useMediaQuery("(max-width:600px)");
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
@@ -116,12 +119,26 @@ const CartSidebar = ({ isOpen, onClose }) => {
         open={snackbarOpen}
         autoHideDuration={3000}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+        anchorOrigin={{
+          vertical: isMobile ? "top" : "bottom",
+          horizontal: "center",
+        }}
+        ContentProps={{
+          sx: {
+            backgroundColor: "transparent",
+            boxShadow: "none",
+          },
+        }}
       >
         <Alert
           onClose={handleSnackbarClose}
           severity={snackbarSeverity}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            backgroundColor: "#fff",
+            color: "#000",
+            boxShadow: 3,
+          }}
         >
           {snackbarMessage}
         </Alert>

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import ProductCard from "./ProductCard";
+import ProductCard from "../Product/ProductCard";
 
 const NewArrival = () => {
   const [slidesToShow, setSlidesToShow] = useState(1); // Default number of slides

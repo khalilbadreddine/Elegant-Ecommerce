@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import MainLayout from "./Components/MainLayout";
+import MainLayout from "./Components/Layout/MainLayout";
 import Home from "./Pages/Home";
 import Shop from "./Pages/Shop";
 import Product from "./Pages/Product";
@@ -9,7 +9,7 @@ import Contact from "./Pages/Contact";
 import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
 import Profile from "./Pages/Profile";
-import ProtectedRoute from "./Components/Sm-Components/ProtectedRoute";
+import ProtectedRoute from "./Components/Layout/ProtectedRoute";
 
 function App() {
   return (

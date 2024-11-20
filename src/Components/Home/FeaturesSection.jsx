@@ -1,4 +1,4 @@
-import { TruckIcon, MoneyIcon, LockIcon, PhoneIcon } from "./Icons";
+import { TruckIcon, MoneyIcon, LockIcon, PhoneIcon } from "../Common/Icons";
 
 const features = [
   {

@@ -1,9 +1,9 @@
 // src/Components/MainLayout.jsx
 import { Outlet } from "react-router-dom";
-import Header from "./Sm-Components/Header";
-import Footer from "./Sm-Components/Footer";
-import AnnouncementBar from "./Sm-Components/AnnouncementBar";
-import NewsletterSection from "./Sm-Components/NewsletterSection";
+import Header from "../Common/Header";
+import Footer from "../Common/Footer";
+import NewsletterSection from "../Home/NewsletterSection";
+import AnnouncementBar from "../Common/AnnouncementBar";
 
 const MainLayout = () => {
   return (

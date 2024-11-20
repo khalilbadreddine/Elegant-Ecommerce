@@ -1,11 +1,11 @@
 // src/Pages/Home.jsx
-import Carousel from "../Components/Sm-Components/Carousel";
-import TaglineSection from "../Components/Sm-Components/TaglineSection";
-import CategorySection from "../Components/Sm-Components/CategorySection";
-import NewArrival from "../Components/Sm-Components/NewArrival";
-import FeaturesSection from "../Components/Sm-Components/FeaturesSection";
-import PromoSection from "../Components/Sm-Components/PromoSection";
-import ArticlesSection from "../Components/Sm-Components/ArticlesSection";
+import Carousel from "../Components/Common/Carousel";
+import TaglineSection from "../Components/Home/TaglineSection";
+import CategorySection from "../Components/Home/CategorySection";
+import NewArrival from "../Components/Home/NewArrival";
+import FeaturesSection from "../Components/Home/FeaturesSection";
+import PromoSection from "../Components/Home/PromoSection";
+import ArticlesSection from "../Components/Home/ArticlesSection";
 
 const Home = () => {
   return (
