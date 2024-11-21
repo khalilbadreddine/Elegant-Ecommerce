@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
-import NewArrival from "./NewArrival";
+import NewArrival from "../Home/NewArrival";
 
 function Resizable() {
   const [display, setDisplay] = useState(true);

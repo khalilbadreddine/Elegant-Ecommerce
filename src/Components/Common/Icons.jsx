@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 // src/components/Icons.jsx
 // Instagram Icon
 export const Instagram = (props) => (
@@ -303,6 +304,99 @@ export const FiveStars = () => {
   );
 };
 // src/Components/Sm-Components/Icons.jsx
+
+// GridIcon
+// GridIcon
+export const GridIcon = (props) => (
+  <div
+    style={{
+      backgroundColor: "darkgray", // Set the background to dark gray
+      borderRadius: "8px", // Optional: Make the background rounded
+      padding: "5px", // Add some spacing around the icon
+      display: "inline-block", // Ensure the icon and background are properly aligned
+    }}
+  >
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      {/* Include your SVG paths here */}
+    </svg>
+  </div>
+);
+
+// SquaresIcon
+export const SquaresIcon = (props) => (
+  <div
+    style={{
+      backgroundColor: "darkgray", // Set the background to dark gray
+      borderRadius: "8px", // Optional: Make the background rounded
+      padding: "5px", // Add some spacing around the icon
+      display: "inline-block", // Ensure the icon and background are properly aligned
+    }}
+  >
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 24 25"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      {/* Include your SVG paths here */}
+    </svg>
+  </div>
+);
+
+// ColumnsIcon
+export const ColumnsIcon = (props) => (
+  <div
+    style={{
+      backgroundColor: "darkgray", // Set the background to dark gray
+      borderRadius: "8px", // Optional: Make the background rounded
+      padding: "5px", // Add some spacing around the icon
+      display: "inline-block", // Ensure the icon and background are properly aligned
+    }}
+  >
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      {/* Include your SVG paths here */}
+    </svg>
+  </div>
+);
+
+// LayoutIcon
+export const LayoutIcon = (props) => (
+  <div
+    style={{
+      backgroundColor: "darkgray", // Set the background to dark gray
+      borderRadius: "8px", // Optional: Make the background rounded
+      padding: "5px", // Add some spacing around the icon
+      display: "inline-block", // Ensure the icon and background are properly aligned
+    }}
+  >
+    <svg
+      width="100%"
+      height="100%"
+      viewBox="0 0 24 25"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      {/* Include your SVG paths here */}
+    </svg>
+  </div>
+);
 
 export const HeartIcon = ({ color = "#6C7275" }) => (
   <svg
