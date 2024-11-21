@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import Filters from "../Components/Shop/Filters";
 import ProductCard from "../Components/Product/ShopProductCard";
+import ShopPageHeader from "../Components/Shop/ShopPageHeader";
 
 const initialProducts = [
   {
@@ -252,6 +253,7 @@ function Shop() {
 
   return (
     <div className="p-4">
+      <ShopPageHeader />
       <Filters
         onFilterChange={handleFilterChange}
         onViewChange={handleViewChange}
