@@ -1,18 +1,9 @@
 // src/components/ProductListings.js
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import ProductCard from '../Components/Product/ShopProductCard';
 import Filters from '../hooks/ProductListings';
 
 const initialProducts = [
-  // Array of initial product objects
-  // Example:
-  // {
-  //   id: 1,
-  //   title: 'Product 1',
-  //   price: 29.99,
-  //   image: '/images/product1.jpg',
-  //   rating: 4.5,
-  // },
 ];
 
 function ProductListings() {
