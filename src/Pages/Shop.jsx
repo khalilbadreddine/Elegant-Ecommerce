@@ -16,29 +16,22 @@ function Shop() {
   const { filteredProducts } = useSelector((state) => state.products);
 
   const [viewMode, setViewMode] = useState("grid"); // Default: 'grid'
-  const [productsToShow, setProductsToShow] = useState(4);
+  const [currentPage, setCurrentPage] = useState(1); // Current page number
+  const itemsPerPage = 4; // Number of products per page
 
   // Automatically adjust view mode based on screen size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
-        // Medium (md) or larger screens
         if (viewMode === "list") {
           setViewMode("grid"); // Fallback to grid if list view is not available
-        }
-      } else {
-        // Small screens
-        if (viewMode === "desktoplist") {
-          setViewMode("list"); // Fallback to list for small screens
         }
       }
     };
 
-    // Initial check and event listener for resize
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    // Cleanup event listener on component unmount
     return () => window.removeEventListener("resize", handleResize);
   }, [viewMode]);
 
@@ -48,23 +41,26 @@ function Shop() {
   }, [dispatch]);
 
   const handleFilterChange = (filters) => {
-    // Dispatch filters to Redux
     dispatch(applyFilters(filters));
-    setProductsToShow(4); // Reset visible products when filters change
+    setCurrentPage(1); // Reset to the first page when filters change
   };
 
   const handleSortChange = (sortOption) => {
-    // Dispatch sort option to Redux
     dispatch(sortProductsAction(sortOption));
-  };
-
-  const loadMoreProducts = () => {
-    setProductsToShow((prev) => prev + 4); // Load more products
   };
 
   const handleViewChange = (mode) => {
     setViewMode(mode);
   };
+
+  // Calculate products for the current page
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const currentProducts = filteredProducts.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
+
+  const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
     <div className="p-4">
@@ -73,33 +69,60 @@ function Shop() {
         onFilterChange={handleFilterChange}
         onSortChange={handleSortChange}
         onViewChange={handleViewChange}
-        viewMode={viewMode} // Pass current viewMode to keep buttons in sync
+        viewMode={viewMode}
       />
-      <div
-        className={`grid gap-4 ${
-          viewMode === "grid"
-            ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-            : viewMode === "desktoplist"
-            ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-2" // Max 2 cards per row
-            : "grid-cols-1"
-        }`}
-      >
-        {filteredProducts.slice(0, productsToShow).map((product) => (
-          <ProductCard key={product.id} product={product} viewMode={viewMode} />
-        ))}
+      <div>
+        <div
+          className={`grid gap-4 ${
+            viewMode === "grid"
+              ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+              : viewMode === "desktoplist"
+              ? "grid-cols-1 md:grid-cols-2"
+              : "grid-cols-1"
+          }`}
+        >
+          {currentProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              viewMode={viewMode}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Load More Button */}
-      {productsToShow < filteredProducts.length && (
-        <div className="flex justify-center mt-4">
+      {/* Pagination */}
+      <div className="flex justify-center mt-10 mb-8 space-x-3">
+        {Array.from({ length: totalPages }, (_, index) => (
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-            onClick={loadMoreProducts}
+            key={index}
+            style={{
+              padding: "0.5rem 1rem",
+              border: "1px solid black", // Primary color for border
+              borderRadius: "0.375rem",
+              backgroundColor: currentPage === index + 1 ? "black" : "#ffffff", // Active and inactive background
+              color: currentPage === index + 1 ? "#ffffff" : "black", // Text color
+              cursor: "pointer",
+              transition: "background-color 0.3s, color 0.3s",
+            }}
+            onClick={() => setCurrentPage(index + 1)}
+            onMouseOver={(e) => {
+              if (currentPage !== index + 1) {
+                e.target.style.backgroundColor = "black"; // Hover background
+                e.target.style.color = "#ffffff"; // Hover text color
+              }
+            }}
+            onMouseOut={(e) => {
+              if (currentPage !== index + 1) {
+                e.target.style.backgroundColor = "#ffffff"; // Reset background
+                e.target.style.color = "black"; // Reset text color
+              }
+            }}
           >
-            Load More
+            {index + 1}
           </button>
-        </div>
-      )}
+        ))}
+      </div>
     </div>
   );
 }

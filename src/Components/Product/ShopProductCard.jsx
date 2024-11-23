@@ -7,6 +7,12 @@ import {
   addToWishlist,
   removeFromWishlist,
 } from "../../redux/actions/wishlistActions";
+import {
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+} from "@material-tailwind/react";
 import { HeartIcon, FiveStars } from "../Common/Icons";
 
 function ProductCard({ product, viewMode }) {
@@ -17,6 +23,8 @@ function ProductCard({ product, viewMode }) {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSnackbarClose = () => setSnackbarOpen(false);
 
@@ -40,26 +48,63 @@ function ProductCard({ product, viewMode }) {
     setSnackbarOpen(true);
   };
 
+  const toggleDialog = () => setIsDialogOpen(!isDialogOpen);
+
+  const getTruncatedDescription = (text) => {
+    const maxLength = 80; // Max characters to display on the card
+    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
+
+  const getContainerClass = () => {
+    switch (viewMode) {
+      case "list":
+        return "flex flex-col sm:flex-row items-center sm:items-start p-4 space-y-4 sm:space-y-0 sm:space-x-4";
+      case "desktoplist":
+        return "flex flex-row items-start p-6 space-x-6 bg-white rounded-lg shadow-md";
+      default: // grid
+        return "p-4 w-full";
+    }
+  };
+
+  const getImageContainerClass = () => {
+    switch (viewMode) {
+      case "list":
+        return "w-full sm:w-1/3";
+      case "desktoplist":
+        return "w-1/2 rounded-lg overflow-hidden";
+      default: // grid
+        return "w-full";
+    }
+  };
+
+  const getImageClass = () => {
+    switch (viewMode) {
+      case "list":
+        return "w-full h-32 sm:h-40 object-cover";
+      case "desktoplist":
+        return "w-full h-48 md:h-56 lg:h-64 object-cover";
+      default: // grid
+        return "w-full h-48";
+    }
+  };
+
+  const getDetailsClass = () => {
+    switch (viewMode) {
+      case "list":
+        return "w-full sm:w-2/3 flex flex-col justify-between";
+      case "desktoplist":
+        return "w-1/2 flex flex-col justify-between space-y-4";
+      default: // grid
+        return "w-full mt-4";
+    }
+  };
+
   return (
     <div
-      className={`border rounded-lg shadow-lg bg-white relative ${
-        viewMode === "list"
-          ? "flex flex-col sm:flex-row items-center sm:items-start p-4 space-y-4 sm:space-y-0 sm:space-x-4"
-          : viewMode === "desktoplist"
-          ? "flex flex-col md:flex-row items-center p-6"
-          : "p-4 w-full"
-      }`}
+      className={`border rounded-lg shadow-lg bg-white relative ${getContainerClass()}`}
     >
       {/* Image Section */}
-      <div
-        className={`relative ${
-          viewMode === "desktoplist"
-            ? "w-full md:w-1/2 pr-0 md:pr-4"
-            : viewMode === "list"
-            ? "w-full sm:w-1/3"
-            : "w-full"
-        }`}
-      >
+      <div className={`relative ${getImageContainerClass()}`}>
         {product.oldPrice && (
           <span className="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tr-lg rounded-bl-lg">
             -
@@ -69,105 +114,121 @@ function ProductCard({ product, viewMode }) {
             %
           </span>
         )}
-        {product.isNew && (
-          <span className="absolute top-6 left-0 bg-teal-500 text-white text-xs font-bold px-2 py-1 rounded-tr-lg rounded-bl-lg">
-            NEW
-          </span>
-        )}
         <img
           src={product.image}
           alt={product.title}
-          className={`rounded-lg object-cover ${
-            viewMode === "list"
-              ? "w-full h-32 sm:h-40"
-              : viewMode === "desktoplist"
-              ? "w-full h-auto md:h-40 lg:h-48"
-              : "w-full h-60"
-          }`}
+          className={`rounded-lg object-cover ${getImageClass()}`}
         />
       </div>
 
       {/* Product Details Section */}
-      <div
-        className={`${
-          viewMode === "desktoplist"
-            ? "w-full md:w-1/2 pl-0 md:pl-4"
-            : viewMode === "list"
-            ? "w-full sm:w-2/3"
-            : "w-full mt-4"
-        }`}
-      >
-        {/* Rating */}
+      <div className={getDetailsClass()}>
         <div className="flex items-center text-yellow-400 text-sm">
           <FiveStars rating={product.rating} />
         </div>
-
-        {/* Title */}
-        <h2
-          className={`font-semibold text-gray-800 ${
-            viewMode === "desktoplist" || viewMode === "list"
-              ? "text-md md:text-lg"
-              : "text-lg"
-          } mt-2 truncate`}
-        >
+        <h2 className="font-semibold text-gray-800 text-lg mt-2 truncate">
           {product.title}
         </h2>
-
-        {/* Pricing */}
         <div className="flex items-center gap-2 mt-1">
-          <span
-            className={`text-gray-800 font-bold ${
-              viewMode === "desktoplist" || viewMode === "list"
-                ? "text-lg md:text-xl"
-                : "text-xl"
-            }`}
-          >
+          <span className="text-gray-800 font-bold text-xl">
             ${product.price.toFixed(2)}
           </span>
           {product.oldPrice && (
-            <span
-              className={`text-gray-400 line-through ${
-                viewMode === "desktoplist" || viewMode === "list"
-                  ? "text-sm md:text-base"
-                  : "text-sm"
-              }`}
-            >
+            <span className="text-gray-400 line-through text-sm">
               ${product.oldPrice.toFixed(2)}
             </span>
           )}
         </div>
-
-        {/* Description */}
-        <p
-          className={`text-sm text-gray-600 mt-2 ${
-            viewMode === "desktoplist" || viewMode === "list"
-              ? "hidden md:block"
-              : ""
-          }`}
-        >
-          {product.description}
+        <p className="text-sm text-gray-600 mt-2">
+          {getTruncatedDescription(product.description)}
         </p>
-
-        {/* Actions */}
-        <div
-          className={`flex items-center space-x-2 mt-4 ${
-            viewMode === "grid" ? "justify-center" : ""
-          }`}
+        <a
+          onClick={toggleDialog}
+          className="text-blue-500 text-sm mt-1 hover:underline cursor-pointer"
         >
+          See More
+        </a>
+
+        <div className="mt-auto flex items-center">
           <button
-            className="flex-1 bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 text-sm md:text-base"
+            className="flex-1 bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 text-sm sm:text-base"
             onClick={handleAddToCart}
           >
             Add to cart
           </button>
           <button
             onClick={handleWishlistToggle}
-            className="p-2 border rounded-full hover:bg-gray-100"
+            className="p-2 border rounded-full hover:bg-gray-100 ml-2"
           >
             <HeartIcon color={isInWishlist ? "red" : "#6C7275"} />
           </button>
         </div>
       </div>
+
+      {/* Dialog */}
+      <Dialog
+        open={isDialogOpen}
+        handler={toggleDialog}
+        className="max-w-screen sm:max-w-md mx-auto p-2"
+      >
+        {/* Close Icon */}
+        <button
+          onClick={toggleDialog}
+          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+          aria-label="Close"
+        >
+          ✕
+        </button>
+
+        <DialogHeader className="text-lg font-semibold text-gray-800 px-4 py-2">
+          {product.title}
+        </DialogHeader>
+        <DialogBody className="overflow-y-auto max-h-[70vh] px-4 py-2">
+          {/* Responsive Image */}
+          <div className="w-full max-h-64 md:max-h-80 overflow-hidden rounded-lg">
+            <img
+              src={product.image}
+              alt={product.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
+          {/* Product Description */}
+          <p className="text-sm text-gray-600 mt-2">{product.description}</p>
+          <div className="flex items-center gap-2 mt-4">
+            <span className="text-gray-800 font-bold text-xl">
+              ${product.price.toFixed(2)}
+            </span>
+            {product.oldPrice && (
+              <span className="text-gray-400 line-through text-sm">
+                ${product.oldPrice.toFixed(2)}
+              </span>
+            )}
+          </div>
+        </DialogBody>
+        <DialogFooter className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 px-4 py-2">
+          {/* Secondary Button */}
+          <button
+            className="border-2 border-black text-black py-2 px-4 rounded-full w-full sm:w-auto hover:bg-gray-100"
+            onClick={() => {
+              window.location.href =
+                "#"; /* product.url || `/product/${product.id}`; */
+            }}
+          >
+            View Product Page
+          </button>
+
+          {/* Primary Button */}
+          <button
+            className="bg-black text-white py-2 px-4 rounded-full w-full sm:w-auto hover:bg-gray-800"
+            onClick={() => {
+              handleAddToCart();
+              toggleDialog();
+            }}
+          >
+            Add to Cart
+          </button>
+        </DialogFooter>
+      </Dialog>
 
       {/* Snackbar */}
       <Snackbar

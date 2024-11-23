@@ -1,5 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+
 function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
   const [category, setCategory] = useState("All Categories");
   const [sortOrder, setSortOrder] = useState("Price: Low to High");
@@ -16,7 +17,6 @@ function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
 
   return (
     <div className="p-4">
-      {/* Filters UI */}
       <div className="flex space-x-4">
         <select
           className="p-2 border rounded-md"
@@ -27,7 +27,6 @@ function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
           <option value="Furniture">Furniture</option>
           <option value="Kitchen">Kitchen</option>
           <option value="Decor">Decor</option>
-          {/* Add other categories as needed */}
         </select>
         <select
           className="p-2 border rounded-md"
@@ -41,7 +40,6 @@ function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
         </select>
       </div>
       <div className="flex space-x-2 mt-4">
-        {/* Grid View */}
         <button
           className={`p-2 border rounded-md ${
             viewMode === "grid" ? "bg-gray-200" : ""
@@ -50,7 +48,6 @@ function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
         >
           Grid View
         </button>
-        {/* List View */}
         <button
           className={`p-2 border rounded-md sm:hidden ${
             viewMode === "list" ? "bg-gray-200" : ""
@@ -59,7 +56,6 @@ function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
         >
           List View
         </button>
-        {/* Desktop List View */}
         <button
           className={`hidden sm:block p-2 border rounded-md ${
             viewMode === "desktoplist" ? "bg-gray-200" : ""
@@ -77,7 +73,7 @@ Filters.propTypes = {
   onFilterChange: PropTypes.func.isRequired,
   onSortChange: PropTypes.func.isRequired,
   onViewChange: PropTypes.func.isRequired,
-  viewMode: PropTypes.oneOf(["grid", "list"]).isRequired,
+  viewMode: PropTypes.oneOf(["grid", "list", "desktoplist"]).isRequired,
 };
 
 export default Filters;
