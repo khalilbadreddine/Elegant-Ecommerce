@@ -16,10 +16,11 @@ function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
   };
 
   return (
-    <div className="p-4">
-      <div className="flex space-x-4">
+    <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between">
+      {/* Left Side: Filters */}
+      <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
         <select
-          className="p-2 border rounded-md"
+          className="p-2 border rounded-md bg-transparent border-gray-300 hover:border-gray-500 focus:ring-2 focus:ring-blue-400 transition duration-300"
           value={category}
           onChange={handleCategoryChange}
         >
@@ -29,7 +30,7 @@ function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
           <option value="Decor">Decor</option>
         </select>
         <select
-          className="p-2 border rounded-md"
+          className="p-2 border rounded-md bg-transparent border-gray-300 hover:border-gray-500 focus:ring-2 focus:ring-blue-400 transition duration-300"
           value={sortOrder}
           onChange={handleSortOrderChange}
         >
@@ -39,7 +40,9 @@ function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
           <option value="Bestsellers">Bestsellers</option>
         </select>
       </div>
-      <div className="flex space-x-2 mt-4">
+
+      {/* Right Side: View Buttons */}
+      <div className="flex space-x-2 mt-4 sm:mt-0">
         <button
           className={`p-2 border rounded-md ${
             viewMode === "grid" ? "bg-gray-200" : ""
