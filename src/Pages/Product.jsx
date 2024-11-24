@@ -1,15 +1,38 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById } from "../redux/actions/productActions"; // Import the action
-import { Swiper, SwiperSlide } from "swiper/react"; // Swiper components
-import "swiper/css"; // Swiper styles
+import { fetchProductById } from "../redux/actions/productActions";
+import { addToCart } from "../redux/actions/cartActions";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../redux/actions/wishlistActions";
+import SnackbarNotification from "../Components/Common/SnackbarNotification";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 
 const Product = () => {
   const { productId } = useParams(); // Get the product ID from the URL
   const dispatch = useDispatch();
+
+  // Redux state
   const products = useSelector((state) => state.products.filteredProducts);
+  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
   const product = products.length > 0 ? products[0] : null;
+
+  // Snackbar state
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  const handleSnackbarClose = () => setSnackbar({ ...snackbar, open: false });
+
+  // Check if the product is in the wishlist
+  const isInWishlist = wishlistItems.some(
+    (item) => item.id === parseInt(productId, 10)
+  );
 
   // Fetch product data on mount
   useEffect(() => {
@@ -34,11 +57,12 @@ const Product = () => {
       const difference = expiry - now;
 
       if (difference > 0) {
-        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((difference / (1000 * 60)) % 60);
-        const seconds = Math.floor((difference / 1000) % 60);
-        setTimeLeft({ days, hours, minutes, seconds });
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          minutes: Math.floor((difference / (1000 * 60)) % 60),
+          seconds: Math.floor((difference / 1000) % 60),
+        });
       } else {
         setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       }
@@ -47,6 +71,35 @@ const Product = () => {
     const interval = setInterval(calculateTimeLeft, 1000);
     return () => clearInterval(interval);
   }, [product?.offerExpiry]);
+
+  // Add to cart handler
+  const handleAddToCart = () => {
+    dispatch(addToCart({ ...product, color: "Default" }));
+    setSnackbar({
+      open: true,
+      message: "Product added to cart!",
+      severity: "success",
+    });
+  };
+
+  // Wishlist toggle handler
+  const handleWishlistToggle = () => {
+    if (isInWishlist) {
+      dispatch(removeFromWishlist(product.id));
+      setSnackbar({
+        open: true,
+        message: "Product removed from wishlist!",
+        severity: "info",
+      });
+    } else {
+      dispatch(addToWishlist(product));
+      setSnackbar({
+        open: true,
+        message: "Product added to wishlist!",
+        severity: "success",
+      });
+    }
+  };
 
   // Render a loading state if the product isn't yet available
   if (!product) {
@@ -64,7 +117,6 @@ const Product = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Image Section */}
           <div className="relative">
-            {/* Mobile Carousel */}
             <div className="block md:hidden">
               <Swiper spaceBetween={10} slidesPerView={1} loop={true}>
                 {product.images.map((image, index) => (
@@ -81,7 +133,6 @@ const Product = () => {
               </Swiper>
             </div>
 
-            {/* Desktop Grid */}
             <div className="hidden md:grid grid-cols-3 gap-4 md:h-[500px]">
               {product.images.map((image, index) => (
                 <div
@@ -100,18 +151,12 @@ const Product = () => {
 
           {/* Product Details */}
           <div>
-            {/* Title */}
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
-
-            {/* Small Description */}
             <p className="text-gray-600 text-sm mb-4">{product.description}</p>
-
-            {/* Reviews */}
             <p className="text-gray-500 text-sm mb-4">
               ★★★★★ ({product.sales} Sales)
             </p>
 
-            {/* Price */}
             <div className="mb-4">
               <span className="text-3xl font-bold text-gray-800">
                 ${product.price.toFixed(2)}
@@ -123,7 +168,6 @@ const Product = () => {
               )}
             </div>
 
-            {/* Offer Expiration */}
             <div className="mb-4">
               <p className="text-sm font-semibold text-gray-700 mb-2">
                 Offer expires in:
@@ -156,39 +200,21 @@ const Product = () => {
               </div>
             </div>
 
-            {/* Measurements */}
-            {product.measurements && (
-              <p className="text-sm text-gray-700 mb-4">
-                <span className="font-semibold">Measurements:</span>{" "}
-                {product.measurements}
-              </p>
-            )}
-
-            {/* Color Options */}
             <div className="mb-4">
-              <p className="text-sm font-semibold mb-2">Choose Color</p>
-              <div className="flex gap-3">
-                {product.colors.map((color, index) => (
-                  <div
-                    key={index}
-                    className="h-8 w-8 rounded-full"
-                    style={{ backgroundColor: color }}
-                  ></div>
-                ))}
-              </div>
-            </div>
-
-            {/* Add to Cart and Wishlist Buttons */}
-            <div className="mb-4">
-              <button className="w-full bg-black text-white py-3 rounded-md text-lg font-semibold mb-2">
+              <button
+                onClick={handleAddToCart}
+                className="w-full bg-black text-white py-3 rounded-md text-lg font-semibold mb-2"
+              >
                 Add to Cart
               </button>
-              <button className="w-full border border-gray-300 py-2 rounded-md text-gray-700 text-lg">
-                Wishlist
+              <button
+                onClick={handleWishlistToggle}
+                className="w-full border border-gray-300 py-2 rounded-md text-gray-700 text-lg"
+              >
+                {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               </button>
             </div>
 
-            {/* Additional Information */}
             <div>
               <h2 className="text-lg font-bold mb-2">Additional Info</h2>
               <ul className="list-disc pl-5">
@@ -202,6 +228,14 @@ const Product = () => {
           </div>
         </div>
       </div>
+
+      {/* Snackbar Notification */}
+      <SnackbarNotification
+        open={snackbar.open}
+        onClose={handleSnackbarClose}
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </div>
   );
 };
