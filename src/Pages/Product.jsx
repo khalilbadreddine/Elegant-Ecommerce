@@ -12,6 +12,9 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
 const Product = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   const { productId } = useParams(); // Get the product ID from the URL
   const dispatch = useDispatch();
 
@@ -118,7 +121,12 @@ const Product = () => {
           {/* Image Section */}
           <div className="relative">
             <div className="block md:hidden">
-              <Swiper spaceBetween={10} slidesPerView={1} loop={true}>
+              <Swiper
+                spaceBetween={10}
+                slidesPerView={1}
+                slidesPerGroup={6}
+                loop={true}
+              >
                 {product.images.map((image, index) => (
                   <SwiperSlide key={index}>
                     <div className="w-full h-64 bg-gray-300 flex items-center justify-center text-gray-700 text-xl font-semibold rounded-lg">
