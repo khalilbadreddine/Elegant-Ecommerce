@@ -1,5 +1,3 @@
-// productReducer.js
-
 import {
   FETCH_PRODUCTS,
   APPLY_FILTERS,
@@ -18,11 +16,12 @@ const initialState = {
 const productReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_PRODUCTS: {
-      // Initialize products and filteredProducts
+      // Handle fetching all products or a single product
+      const isSingleProduct = Array.isArray(action.payload) && action.payload.length === 1;
       return {
         ...state,
-        products: action.payload,
-        filteredProducts: sortProducts(action.payload, state.sortOrder),
+        products: isSingleProduct ? state.products : action.payload,
+        filteredProducts: isSingleProduct ? action.payload : sortProducts(action.payload, state.sortOrder),
       };
     }
 
@@ -57,9 +56,7 @@ const applyFilters = (products, filters) => {
   let filtered = products;
 
   if (filters.category && filters.category !== "All Categories") {
-    filtered = filtered.filter(
-      (product) => product.category === filters.category
-    );
+    filtered = filtered.filter((product) => product.category === filters.category);
   }
 
   return filtered;

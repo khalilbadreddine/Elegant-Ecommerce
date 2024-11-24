@@ -1,54 +1,63 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { Snackbar, Alert } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/actions/cartActions";
 import {
   addToWishlist,
   removeFromWishlist,
 } from "../../redux/actions/wishlistActions";
-import {
-  Dialog,
-  DialogHeader,
-  DialogBody,
-  DialogFooter,
-} from "@material-tailwind/react";
+import ProductDialog from "../Common/ProductDialog";
+import SnackbarNotification from "../Common/SnackbarNotification";
 import { HeartIcon, FiveStars } from "../Common/Icons";
 
-function ProductCard({ product, viewMode }) {
+function ShopProductCard({ product, viewMode }) {
+  const navigate = useNavigate();
+
+  const handleViewProduct = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   const dispatch = useDispatch();
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
   const isInWishlist = wishlistItems.some((item) => item.id === product.id);
 
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
-
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleSnackbarClose = () => setSnackbarOpen(false);
+  const handleSnackbarClose = () =>
+    setSnackbar((prev) => ({ ...prev, open: false }));
 
   const handleAddToCart = () => {
     dispatch(addToCart({ ...product, color: "Default" }));
-    setSnackbarMessage("Product added to cart");
-    setSnackbarSeverity("success");
-    setSnackbarOpen(true);
+    setSnackbar({
+      open: true,
+      message: "Product added to cart",
+      severity: "success",
+    });
   };
 
   const handleWishlistToggle = () => {
     if (isInWishlist) {
       dispatch(removeFromWishlist(product.id));
-      setSnackbarMessage("Removed from wishlist");
-      setSnackbarSeverity("info");
+      setSnackbar({
+        open: true,
+        message: "Removed from wishlist",
+        severity: "info",
+      });
     } else {
       dispatch(addToWishlist(product));
-      setSnackbarMessage("Added to wishlist");
-      setSnackbarSeverity("success");
+      setSnackbar({
+        open: true,
+        message: "Added to wishlist",
+        severity: "success",
+      });
     }
-    setSnackbarOpen(true);
   };
-
-  const toggleDialog = () => setIsDialogOpen(!isDialogOpen);
 
   const getTruncatedDescription = (text) => {
     const maxLength = 80; // Max characters to display on the card
@@ -143,7 +152,7 @@ function ProductCard({ product, viewMode }) {
           {getTruncatedDescription(product.description)}
         </p>
         <a
-          onClick={toggleDialog}
+          onClick={() => setIsDialogOpen(true)}
           className="text-blue-500 text-sm mt-1 hover:underline cursor-pointer"
         >
           See More
@@ -152,9 +161,9 @@ function ProductCard({ product, viewMode }) {
         <div className="mt-auto flex items-center">
           <button
             className="flex-1 bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 text-sm sm:text-base"
-            onClick={handleAddToCart}
+            /*  onClick={handleAddToCart} */ onClick={handleViewProduct}
           >
-            Add to cart
+            {/*  Add to cart */} View Product
           </button>
           <button
             onClick={handleWishlistToggle}
@@ -166,90 +175,25 @@ function ProductCard({ product, viewMode }) {
       </div>
 
       {/* Dialog */}
-      <Dialog
-        open={isDialogOpen}
-        handler={toggleDialog}
-        className="max-w-screen sm:max-w-md mx-auto p-2"
-      >
-        {/* Close Icon */}
-        <button
-          onClick={toggleDialog}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-          aria-label="Close"
-        >
-          ✕
-        </button>
-
-        <DialogHeader className="text-lg font-semibold text-gray-800 px-4 py-2">
-          {product.title}
-        </DialogHeader>
-        <DialogBody className="overflow-y-auto max-h-[70vh] px-4 py-2">
-          {/* Responsive Image */}
-          <div className="w-full max-h-64 md:max-h-80 overflow-hidden rounded-lg">
-            <img
-              src={product.image}
-              alt={product.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-          {/* Product Description */}
-          <p className="text-sm text-gray-600 mt-2">{product.description}</p>
-          <div className="flex items-center gap-2 mt-4">
-            <span className="text-gray-800 font-bold text-xl">
-              ${product.price.toFixed(2)}
-            </span>
-            {product.oldPrice && (
-              <span className="text-gray-400 line-through text-sm">
-                ${product.oldPrice.toFixed(2)}
-              </span>
-            )}
-          </div>
-        </DialogBody>
-        <DialogFooter className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0 px-4 py-2">
-          {/* Secondary Button */}
-          <button
-            className="border-2 border-black text-black py-2 px-4 rounded-full w-full sm:w-auto hover:bg-gray-100"
-            onClick={() => {
-              window.location.href =
-                "#"; /* product.url || `/product/${product.id}`; */
-            }}
-          >
-            View Product Page
-          </button>
-
-          {/* Primary Button */}
-          <button
-            className="bg-black text-white py-2 px-4 rounded-full w-full sm:w-auto hover:bg-gray-800"
-            onClick={() => {
-              handleAddToCart();
-              toggleDialog();
-            }}
-          >
-            Add to Cart
-          </button>
-        </DialogFooter>
-      </Dialog>
+      <ProductDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        product={product}
+        onAddToCart={handleAddToCart}
+      />
 
       {/* Snackbar */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
+      <SnackbarNotification
+        open={snackbar.open}
         onClose={handleSnackbarClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{ width: "100%" }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
+        message={snackbar.message}
+        severity={snackbar.severity}
+      />
     </div>
   );
 }
 
-ProductCard.propTypes = {
+ShopProductCard.propTypes = {
   product: PropTypes.shape({
     id: PropTypes.number.isRequired,
     image: PropTypes.string.isRequired,
@@ -263,4 +207,4 @@ ProductCard.propTypes = {
   viewMode: PropTypes.oneOf(["grid", "list", "desktoplist"]).isRequired,
 };
 
-export default ProductCard;
+export default ShopProductCard;

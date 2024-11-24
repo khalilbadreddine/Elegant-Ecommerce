@@ -1,153 +1,151 @@
-import { useState } from "react";
 import PropTypes from "prop-types";
-import { Snackbar, Alert, useMediaQuery } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import { addToCart } from "../../redux/actions/cartActions";
 import {
   addToWishlist,
   removeFromWishlist,
 } from "../../redux/actions/wishlistActions";
-import { HeartIcon, FiveStars } from "../Common/Icons";
+import { HeartIcon, StarIcon } from "../Common/Icons";
+import ProductDialog from "../Common/ProductDialog";
 
-const ProductCard = ({ id, img, name, price, originalPrice }) => {
+const ProductCard = ({
+  id,
+  img,
+  name,
+  price,
+  originalPrice,
+  rating,
+  description,
+  onSnackbar, // Receive snackbar handler from parent
+}) => {
   const dispatch = useDispatch();
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
   const isInWishlist = wishlistItems.some((item) => item.id === id);
 
-  // Snackbar state
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  // Responsive breakpoint
-  const isMobile = useMediaQuery("(max-width:600px)");
-
-  const handleSnackbarClose = () => {
-    setSnackbarOpen(false);
-  };
-
-  // Add to Cart
   const handleAddToCart = () => {
-    const product = {
-      id,
-      image: img,
-      title: name,
-      price: parseFloat(price),
-      color: "Default",
-    };
-    dispatch(addToCart(product));
-    setSnackbarMessage("Product added to cart");
-    setSnackbarSeverity("success");
-    setSnackbarOpen(true);
+    dispatch(addToCart({ id, image: img, title: name, price }));
+    onSnackbar("Product added to cart", "success");
   };
 
-  // Toggle Wishlist
   const handleWishlistToggle = () => {
-    const product = {
-      id,
-      image: img,
-      title: name,
-      price: parseFloat(price),
-    };
     if (isInWishlist) {
       dispatch(removeFromWishlist(id));
-      setSnackbarMessage("Removed from wishlist");
-      setSnackbarSeverity("info");
+      onSnackbar("Removed from wishlist", "info");
     } else {
-      dispatch(addToWishlist(product));
-      setSnackbarMessage("Added to wishlist");
-      setSnackbarSeverity("success");
+      dispatch(addToWishlist({ id, image: img, title: name, price }));
+      onSnackbar("Added to wishlist", "success");
     }
-    setSnackbarOpen(true);
+  };
+
+  const renderStars = () => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasPartialStar = rating % 1 >= 0.5;
+
+    for (let i = 0; i < 5; i++) {
+      if (i < fullStars) {
+        stars.push(<StarIcon key={i} style={{ fill: "#FFD700" }} />);
+      } else if (i === fullStars && hasPartialStar) {
+        stars.push(
+          <StarIcon
+            key={i}
+            style={{
+              fill: "url(#half-star-gradient)",
+              clipPath: "polygon(0 0, 50% 0, 50% 100%, 0 100%)",
+            }}
+          />
+        );
+      } else {
+        stars.push(<StarIcon key={i} style={{ fill: "#d3d3d3" }} />);
+      }
+    }
+    return stars;
   };
 
   return (
-    <div className="bg-white mb-4 relative w-full max-w-[262px] h-[400px] sm:h-[450px] rounded-lg border flex flex-col border-gray-200 shadow-md group overflow-hidden font-poppins">
-      {/* Badge Section */}
-      <div className="absolute top-3 left-3 z-10 flex flex-col space-y-1">
-        <span className="text-[15px] sm:text-sm font-bold uppercase bg-black text-white py-1 px-2 rounded-md">
-          New
-        </span>
-        <span className="text-[15px] sm:text-sm font-bold text-green-600 bg-green-100 py-1 px-2 rounded-md">
-          -50%
-        </span>
-      </div>
+    <>
+      <div className="max-w-sm mx-auto bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden md:max-w-full flex flex-col hover:shadow-lg transition-shadow duration-300">
+        {/* Product Image */}
+        <div className="relative">
+          <img
+            src={img}
+            alt={name}
+            className="w-full h-56 object-cover md:h-64"
+          />
+          {/* Badge */}
+          {originalPrice && (
+            <span className="absolute top-3 left-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-md">
+              -{Math.round(((originalPrice - price) / originalPrice) * 100)}%
+            </span>
+          )}
+          {/* Wishlist Button */}
+          <button
+            onClick={handleWishlistToggle}
+            aria-label={
+              isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"
+            }
+            className="absolute top-3 right-3 bg-white rounded-full p-2 shadow-md hover:shadow-lg transition"
+          >
+            <HeartIcon color={isInWishlist ? "red" : "gray"} />
+          </button>
+        </div>
 
-      {/* Heart Icon */}
-      <button
-        className="absolute top-3 right-3 z-10 bg-white p-2 sm:p-2.5 rounded-full shadow-md hover:shadow-lg transition-all"
-        onClick={handleWishlistToggle}
-      >
-        <HeartIcon color={isInWishlist ? "red" : "#6C7275"} />
-      </button>
-
-      <div className="relative w-full h-[260px] sm:h-[320px] bg-gray-200">
-        <img
-          className="w-full h-full object-cover object-center"
-          src={img}
-          alt={name}
-        />
-        <button
-          className="absolute w-[70%] bottom-3 left-1/2 transform -translate-x-1/2 bg-black text-white text-sm py-2 px-4 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          onClick={handleAddToCart}
-        >
-          Add to cart
-        </button>
-      </div>
-      <div className="p-3 sm:p-4">
-        <div className="flex flex-col items-start">
-          <FiveStars />
-          <h3 className="text-sm sm:text-base mb-1 font-semibold text-gray-800 truncate">
+        {/* Product Details */}
+        <div className="p-4 flex flex-col flex-grow">
+          <h3 className="text-lg font-semibold text-gray-800 line-clamp-1">
             {name}
           </h3>
+          <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+            {description}
+          </p>
+          <div className="flex justify-between items-center mt-3">
+            <span className="text-xl text-green-600 font-bold">${price}</span>
+            {originalPrice && (
+              <span className="text-sm text-gray-400 line-through">
+                ${originalPrice}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center space-x-1 mt-2">
+            {renderStars()}
+          </div>
         </div>
-        <div className="flex gap-3 items-center mt-2">
-          <span className="text-green-600 text-lg">${price}</span>
-          <span className="line-through text-gray-400 text-sm">
-            ${originalPrice}
-          </span>
+
+        {/* View Details Button */}
+        <div className="mt-auto p-4">
+          <button
+            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition"
+            onClick={() => setIsDialogOpen(true)}
+          >
+            View Details
+          </button>
         </div>
       </div>
 
-      {/* Snackbar */}
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-        onClose={handleSnackbarClose}
-        anchorOrigin={{
-          vertical: isMobile ? "top" : "bottom",
-          horizontal: "center",
-        }}
-        ContentProps={{
-          sx: {
-            backgroundColor: "transparent",
-            boxShadow: "none",
-          },
-        }}
-      >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbarSeverity}
-          sx={{
-            width: "100%",
-            backgroundColor: "#fff",
-            color: "#000",
-            boxShadow: 3,
-          }}
-        >
-          {snackbarMessage}
-        </Alert>
-      </Snackbar>
-    </div>
+      {/* Dialog */}
+      <ProductDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
+        product={{ id, image: img, title: name, price, description }}
+        onAddToCart={handleAddToCart}
+      />
+    </>
   );
 };
 
 ProductCard.propTypes = {
-  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  id: PropTypes.number.isRequired,
   img: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  price: PropTypes.string.isRequired,
-  originalPrice: PropTypes.string.isRequired,
+  price: PropTypes.number.isRequired,
+  originalPrice: PropTypes.number,
+  rating: PropTypes.number.isRequired,
+  category: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  onSnackbar: PropTypes.func.isRequired, // Add snackbar handler prop
 };
 
 export default ProductCard;
