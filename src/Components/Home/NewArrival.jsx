@@ -4,85 +4,12 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ProductCard from "../Product/ProductCard";
+import mockProducts from "../../utils/mockProducts.js";
 
 const NewArrival = () => {
   const [slidesToShow, setSlidesToShow] = useState(1); // Default number of slides
   const [progress, setProgress] = useState(0); // Progress bar value
   const sliderContainerRef = useRef(null);
-
-  // Updated sliderItems with 'id' property
-  const sliderItems = [
-    {
-      id: 1,
-      img: "/assets/Couch.png",
-      name: "Modern Loveseat Sofa",
-      price: "199.00",
-      originalPrice: "400.00",
-    },
-    {
-      id: 2,
-      img: "/assets/red-table.png",
-      name: "Elegant Red Table",
-      price: "89.99",
-      originalPrice: "129.99",
-    },
-    {
-      id: 3,
-      img: "/assets/lamp.png",
-      name: "Vintage Table Lamp",
-      price: "49.99",
-      originalPrice: "79.99",
-    },
-    {
-      id: 4,
-      img: "/assets/tall-lamp.png",
-      name: "Tall Standing Lamp",
-      price: "79.99",
-      originalPrice: "109.99",
-    },
-    {
-      id: 5,
-      img: "/assets/pillow.png",
-      name: "Comfortable Pillow",
-      price: "19.99",
-      originalPrice: "29.99",
-    },
-    {
-      id: 6,
-      img: "/assets/backet.png",
-      name: "Decorative Basket",
-      price: "24.99",
-      originalPrice: "34.99",
-    },
-    {
-      id: 7,
-      img: "/assets/couch-gray.png",
-      name: "Luxurious Gray Sofa",
-      price: "599.99",
-      originalPrice: "899.99",
-    },
-    {
-      id: 8,
-      img: "/assets/plakar.png",
-      name: "Plakar LED Lamp",
-      price: "249.00",
-      originalPrice: "300.00",
-    },
-    {
-      id: 9,
-      img: "/assets/toast.png",
-      name: "Premium Toaster",
-      price: "224.99",
-      originalPrice: "299.00",
-    },
-    {
-      id: 10,
-      img: "/assets/black-table.png",
-      name: "Black Coffee Table",
-      price: "149.99",
-      originalPrice: "199.99",
-    },
-  ];
 
   const calculateSlidesToShow = () => {
     if (sliderContainerRef.current) {
@@ -92,12 +19,11 @@ const NewArrival = () => {
       setSlidesToShow(slides);
 
       // Update progress based on the initial visible slides
-      setProgress((slides / sliderItems.length) * 100);
+      setProgress((slides / mockProducts.length) * 100);
     }
   };
 
   useEffect(() => {
-    //endak tnsay resize
     calculateSlidesToShow(); // Calculate on initial render
     window.addEventListener("resize", calculateSlidesToShow); // Recalculate on resize
 
@@ -116,10 +42,10 @@ const NewArrival = () => {
       // Update progress when the slide changes
       const visibleSlides = Math.min(
         slidesToShow,
-        sliderItems.length - currentSlide
+        mockProducts.length - currentSlide
       );
       const progressPercentage =
-        ((currentSlide + visibleSlides) / sliderItems.length) * 100;
+        ((currentSlide + visibleSlides) / mockProducts.length) * 100;
       setProgress(progressPercentage);
     },
   };
@@ -144,14 +70,14 @@ const NewArrival = () => {
       <div className="relative">
         {/* Slider */}
         <Slider {...settings}>
-          {sliderItems.map((item) => (
+          {mockProducts.map((item) => (
             <div key={item.id} className="px-2">
               <ProductCard
                 id={item.id}
-                img={item.img}
-                name={item.name}
-                price={item.price}
-                originalPrice={item.originalPrice}
+                img={item.image} // Update to match the mockProducts key
+                name={item.title} // Update to match the mockProducts key
+                price={item.price} // Update to match the mockProducts key
+                originalPrice={item.oldPrice} // Update to match the mockProducts key
               />
             </div>
           ))}

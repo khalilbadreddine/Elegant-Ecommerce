@@ -3,7 +3,8 @@ const ShopPageHeader = () => {
     <div
       className="h-48 sm:h-56 lg:h-64 rounded-md flex flex-col items-center justify-center text-center"
       style={{
-        backgroundImage: "url('/assets/shop.jpeg')",
+        backgroundImage:
+          "url('https://images.pexels.com/photos/1743227/pexels-photo-1743227.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}

@@ -1,71 +1,117 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { List, Grid, GridList } from "../Common/Icons";
+import {
+  Menu,
+  MenuHandler,
+  MenuList,
+  MenuItem,
+  Button,
+} from "@material-tailwind/react";
 
 function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
   const [category, setCategory] = useState("All Categories");
   const [sortOrder, setSortOrder] = useState("Price: Low to High");
 
-  const handleCategoryChange = (e) => {
-    setCategory(e.target.value);
-    onFilterChange({ category: e.target.value });
+  const handleCategoryChange = (value) => {
+    setCategory(value);
+    onFilterChange({ category: value });
   };
 
-  const handleSortOrderChange = (e) => {
-    setSortOrder(e.target.value);
-    onSortChange(e.target.value);
+  const handleSortOrderChange = (value) => {
+    setSortOrder(value);
+    onSortChange(value);
   };
 
   return (
     <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between">
       {/* Left Side: Filters */}
       <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
-        <select
-          className="p-2 border rounded-md bg-transparent border-gray-300 hover:border-gray-500 focus:ring-2 focus:ring-blue-400 transition duration-300"
-          value={category}
-          onChange={handleCategoryChange}
-        >
-          <option value="All Categories">All Categories</option>
-          <option value="Furniture">Furniture</option>
-          <option value="Kitchen">Kitchen</option>
-          <option value="Decor">Decor</option>
-        </select>
-        <select
-          className="p-2 border rounded-md bg-transparent border-gray-300 hover:border-gray-500 focus:ring-2 focus:ring-blue-400 transition duration-300"
-          value={sortOrder}
-          onChange={handleSortOrderChange}
-        >
-          <option value="Price: Low to High">Price: Low to High</option>
-          <option value="Price: High to Low">Price: High to Low</option>
-          <option value="New Arrivals">New Arrivals</option>
-          <option value="Bestsellers">Bestsellers</option>
-        </select>
+        {/* Category Dropdown */}
+        <Menu>
+          <MenuHandler>
+            <Button
+              variant="outlined"
+              color="blue-gray"
+              className="w-full sm:w-auto"
+            >
+              {category}
+            </Button>
+          </MenuHandler>
+          <MenuList>
+            {["All Categories", "Furniture", "Kitchen", "Decor"].map((item) => (
+              <MenuItem
+                key={item}
+                onClick={() => handleCategoryChange(item)}
+                className={category === item ? "bg-gray-100 font-bold" : ""}
+              >
+                {item}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+
+        {/* Sort Order Dropdown */}
+        <Menu>
+          <MenuHandler>
+            <Button
+              variant="outlined"
+              color="blue-gray"
+              className="w-full sm:w-auto"
+            >
+              {sortOrder}
+            </Button>
+          </MenuHandler>
+          <MenuList>
+            {[
+              "Price: Low to High",
+              "Price: High to Low",
+              "New Arrivals",
+              "Bestsellers",
+            ].map((item) => (
+              <MenuItem
+                key={item}
+                onClick={() => handleSortOrderChange(item)}
+                className={sortOrder === item ? "bg-gray-100 font-bold" : ""}
+              >
+                {item}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
       </div>
 
       {/* Right Side: View Buttons */}
       <div className="flex space-x-2 mt-4 sm:mt-0">
         <button
-          className={`p-2 border rounded-md ${
-            viewMode === "grid" ? "bg-gray-200" : ""
+          className={`p-2 border rounded-md transition ${
+            viewMode === "grid"
+              ? "bg-gray-200 dark:bg-gray-700"
+              : "hover:bg-gray-100 dark:hover:bg-gray-600"
           }`}
           onClick={() => onViewChange("grid")}
         >
-          Grid View
+          <Grid />
         </button>
         <button
-          className={`p-2 border rounded-md sm:hidden ${
-            viewMode === "list" ? "bg-gray-200" : ""
+          className={`p-2 border rounded-md sm:hidden transition ${
+            viewMode === "list"
+              ? "bg-gray-200 dark:bg-gray-700"
+              : "hover:bg-gray-100 dark:hover:bg-gray-600"
           }`}
           onClick={() => onViewChange("list")}
         >
-          List View
+          <List />
         </button>
         <button
-          className={`hidden sm:block p-2 border rounded-md ${
-            viewMode === "desktoplist" ? "bg-gray-200" : ""
+          className={`hidden sm:block p-2 border rounded-md transition ${
+            viewMode === "desktoplist"
+              ? "bg-gray-200 dark:bg-gray-700"
+              : "hover:bg-gray-100 dark:hover:bg-gray-600"
           }`}
           onClick={() => onViewChange("desktoplist")}
         >
-          Desktop List
+          <GridList />
         </button>
       </div>
     </div>
