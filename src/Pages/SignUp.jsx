@@ -1,7 +1,7 @@
 // src/Pages/SignUp.jsx
-import couchImage from "https://i.ibb.co/v1fX5fH/couch2.png"; // Import the image
 
 const SignUp = () => {
+  const couchImage = "https://i.ibb.co/v1fX5fH/couch2.png"; // Import the image
   return (
     <div className="flex flex-col md:flex-row min-h-screen md:h-screen items-center justify-center ">
       {/* Left Section: Image with Logo on Top */}
