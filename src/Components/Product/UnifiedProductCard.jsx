@@ -82,11 +82,11 @@ const UnifiedProductCard = ({
   const getContainerClass = () => {
     switch (viewMode) {
       case "list":
-        return "flex flex-col sm:flex-row items-center sm:items-start p-4 space-y-4 sm:space-y-0 sm:space-x-4 bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg border border-[#BEC0C0] transition-shadow duration-300";
+        return "flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg transition-shadow duration-300 p-6";
       case "desktoplist":
-        return "flex flex-row items-start p-6 space-x-6 bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg border border-[#BEC0C0] transition-shadow duration-300";
+        return "flex flex-row items-start space-x-8 bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg transition-shadow duration-300 p-8";
       default:
-        return "p-4 w-full bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg border border-[#BEC0C0] transition-shadow duration-300";
+        return "flex flex-col bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg transition-shadow duration-300 p-4";
     }
   };
 
@@ -105,7 +105,7 @@ const UnifiedProductCard = ({
     <div className={getContainerClass()}>
       <div className="relative group">
         {product.oldPrice && (
-          <span className="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tr-lg rounded-bl-lg">
+          <span className="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-md">
             -
             {Math.round(
               ((product.oldPrice - product.price) / product.oldPrice) * 100
@@ -127,7 +127,7 @@ const UnifiedProductCard = ({
         </button>
       </div>
 
-      <div className="flex flex-col mt-4">
+      <div className="flex flex-col mt-4 sm:mt-0 sm:ml-6">
         <div className="flex items-center text-yellow-400 text-sm">
           {renderStars()}
           <span className="text-sm text-[#6C7275] ml-2">
