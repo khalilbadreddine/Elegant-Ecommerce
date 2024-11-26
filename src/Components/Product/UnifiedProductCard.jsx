@@ -127,7 +127,7 @@ const UnifiedProductCard = ({
     }
   };
 
-  // Render rating stars
+  // Render rating stars ****
   const renderStars = () => {
     return <FiveStars rating={product.rating} />;
   };
