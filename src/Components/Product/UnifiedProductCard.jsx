@@ -204,3 +204,4 @@ UnifiedProductCard.propTypes = {
 };
 
 export default UnifiedProductCard;
+//dont know why
