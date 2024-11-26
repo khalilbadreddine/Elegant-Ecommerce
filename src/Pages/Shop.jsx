@@ -1,3 +1,4 @@
+/* Shop.js */
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -6,7 +7,7 @@ import {
   sortProductsAction,
 } from "../redux/actions/productActions";
 import Filters from "../Components/Shop/Filters";
-import ProductCard from "../Components/Product/ShopProductCard";
+import UnifiedProductCard from "../Components/Product/UnifiedProductCard";
 import ShopPageHeader from "../Components/Shop/ShopPageHeader";
 
 function Shop() {
@@ -82,10 +83,11 @@ function Shop() {
           }`}
         >
           {currentProducts.map((product) => (
-            <ProductCard
+            <UnifiedProductCard
               key={product.id}
               product={product}
               viewMode={viewMode}
+              useNavigation={true}
             />
           ))}
         </div>
@@ -98,24 +100,24 @@ function Shop() {
             key={index}
             style={{
               padding: "0.5rem 1rem",
-              border: "1px solid black", // Primary color for border
+              border: "1px solid black",
               borderRadius: "0.375rem",
-              backgroundColor: currentPage === index + 1 ? "black" : "#ffffff", // Active and inactive background
-              color: currentPage === index + 1 ? "#ffffff" : "black", // Text color
+              backgroundColor: currentPage === index + 1 ? "black" : "#ffffff",
+              color: currentPage === index + 1 ? "#ffffff" : "black",
               cursor: "pointer",
               transition: "background-color 0.3s, color 0.3s",
             }}
             onClick={() => setCurrentPage(index + 1)}
             onMouseOver={(e) => {
               if (currentPage !== index + 1) {
-                e.target.style.backgroundColor = "black"; // Hover background
-                e.target.style.color = "#ffffff"; // Hover text color
+                e.target.style.backgroundColor = "black";
+                e.target.style.color = "#ffffff";
               }
             }}
             onMouseOut={(e) => {
               if (currentPage !== index + 1) {
-                e.target.style.backgroundColor = "#ffffff"; // Reset background
-                e.target.style.color = "black"; // Reset text color
+                e.target.style.backgroundColor = "#ffffff";
+                e.target.style.color = "black";
               }
             }}
           >
