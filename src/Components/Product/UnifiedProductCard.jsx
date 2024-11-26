@@ -14,29 +14,25 @@ import { HeartIcon, FiveStars } from "../Common/Icons";
 
 const UnifiedProductCard = ({
   product,
-  onSnackbar, // Optional function for external snackbar handling
-  viewMode = "grid", // 'grid', 'list', 'desktoplist'
-  useNavigation = false, // Whether to navigate to product page or open a modal
+  onSnackbar,
+  viewMode = "grid",
+  useNavigation = false,
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
   const isInWishlist = wishlistItems.some((item) => item.id === product.id);
 
-  // State for snackbar notifications
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success",
   });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleSnackbarClose = () =>
     setSnackbar((prev) => ({ ...prev, open: false }));
 
-  // State for product dialog
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-  // Handle adding product to cart
   const handleAddToCart = () => {
     dispatch(addToCart({ ...product, color: "Default" }));
     const message = "Product added to cart";
@@ -47,7 +43,6 @@ const UnifiedProductCard = ({
     }
   };
 
-  // Handle adding/removing product from wishlist
   const handleWishlistToggle = () => {
     if (isInWishlist) {
       dispatch(removeFromWishlist(product.id));
@@ -68,7 +63,6 @@ const UnifiedProductCard = ({
     }
   };
 
-  // Handle viewing product details
   const handleViewProduct = () => {
     if (useNavigation) {
       navigate(`/product/${product.id}`);
@@ -77,67 +71,39 @@ const UnifiedProductCard = ({
     }
   };
 
-  // Truncate product description
   const getTruncatedDescription = (text, maxLength = 80) => {
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
 
-  // Dynamic classes based on view mode
+  const renderStars = () => {
+    return <FiveStars rating={product.rating} />;
+  };
+
   const getContainerClass = () => {
     switch (viewMode) {
       case "list":
-        return "flex flex-col sm:flex-row items-center sm:items-start p-4 space-y-4 sm:space-y-0 sm:space-x-4";
+        return "flex flex-col sm:flex-row items-center sm:items-start p-4 space-y-4 sm:space-y-0 sm:space-x-4 bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg border border-[#BEC0C0] transition-shadow duration-300";
       case "desktoplist":
-        return "flex flex-row items-start p-6 space-x-6 bg-white rounded-lg shadow-md";
-      default: // 'grid'
-        return "p-4 w-full";
-    }
-  };
-
-  const getImageContainerClass = () => {
-    switch (viewMode) {
-      case "list":
-        return "w-full sm:w-1/3";
-      case "desktoplist":
-        return "w-1/2 rounded-lg overflow-hidden";
+        return "flex flex-row items-start p-6 space-x-6 bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg border border-[#BEC0C0] transition-shadow duration-300";
       default:
-        return "w-full";
+        return "p-4 w-full bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg border border-[#BEC0C0] transition-shadow duration-300";
     }
   };
 
   const getImageClass = () => {
     switch (viewMode) {
       case "list":
-        return "w-full h-32 sm:h-40 object-cover";
+        return "w-full h-32 sm:h-40 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
       case "desktoplist":
-        return "w-full h-48 md:h-56 lg:h-64 object-cover";
+        return "w-full h-48 md:h-56 lg:h-64 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
       default:
-        return "w-full h-48";
+        return "w-full h-48 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
     }
-  };
-
-  const getDetailsClass = () => {
-    switch (viewMode) {
-      case "list":
-        return "w-full sm:w-2/3 flex flex-col justify-between";
-      case "desktoplist":
-        return "w-1/2 flex flex-col justify-between space-y-4";
-      default:
-        return "w-full mt-4";
-    }
-  };
-
-  // Render rating stars ****
-  const renderStars = () => {
-    return <FiveStars rating={product.rating} />;
   };
 
   return (
-    <div
-      className={`border rounded-lg shadow-lg bg-white relative ${getContainerClass()}`}
-    >
-      {/* Image Section */}
-      <div className={`relative ${getImageContainerClass()}`}>
+    <div className={getContainerClass()}>
+      <div className="relative group">
         {product.oldPrice && (
           <span className="absolute top-0 left-0 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-tr-lg rounded-bl-lg">
             -
@@ -150,37 +116,36 @@ const UnifiedProductCard = ({
         <img
           src={product.image}
           alt={product.title}
-          className={`rounded-lg object-cover ${getImageClass()}`}
+          className={getImageClass()}
         />
         <button
           onClick={handleWishlistToggle}
           aria-label={isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
           className="absolute top-3 right-3 bg-[#F3F5F7] rounded-full p-2 shadow-md hover:shadow-lg transition"
         >
-          <HeartIcon color={isInWishlist ? "red" : "#6C7275"} />
+          <HeartIcon color={isInWishlist ? "#232627" : "#6C7275"} />
         </button>
       </div>
 
-      {/* Product Details Section */}
-      <div className={getDetailsClass()}>
+      <div className="flex flex-col mt-4">
         <div className="flex items-center text-yellow-400 text-sm">
           {renderStars()}
           <span className="text-sm text-[#6C7275] ml-2">
             {product.rating.toFixed(1)} out of 5
           </span>
         </div>
-        <h3 className="font-semibold text-gray-800 text-lg mt-2 line-clamp-1">
+        <h3 className="font-semibold text-[#141718] text-lg mt-2 line-clamp-1">
           {product.title}
         </h3>
-        <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+        <p className="text-sm text-[#6C7275] mt-2 line-clamp-2">
           {getTruncatedDescription(product.description)}
         </p>
         <div className="flex items-center gap-2 mt-4">
-          <span className="text-gray-800 font-bold text-xl">
+          <span className="text-[#141718] font-bold text-xl">
             ${product.price.toFixed(2)}
           </span>
           {product.oldPrice && (
-            <span className="text-gray-400 line-through text-sm">
+            <span className="text-[#BEC0C0] line-through text-sm">
               ${product.oldPrice.toFixed(2)}
             </span>
           )}
@@ -188,21 +153,20 @@ const UnifiedProductCard = ({
 
         <div className="mt-auto flex items-center space-x-2">
           <button
-            className="flex-1 bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 text-sm sm:text-base"
+            className="flex-1 bg-[#232627] text-white py-2 rounded-lg hover:bg-[#343839] transition-colors duration-200 text-sm sm:text-base"
             onClick={handleViewProduct}
           >
             {useNavigation ? "View Product" : "View Details"}
           </button>
           <button
             onClick={handleAddToCart}
-            className="flex-1 bg-[#232627] text-white py-2 rounded-lg hover:bg-[#343839] transition-colors duration-200 text-sm sm:text-base"
+            className="flex-1 bg-[#141718] text-white py-2 rounded-lg hover:bg-[#232627] transition-colors duration-200 text-sm sm:text-base"
           >
             Add to Cart
           </button>
         </div>
       </div>
 
-      {/* Product Dialog */}
       {!useNavigation && (
         <ProductDialog
           isOpen={isDialogOpen}
@@ -212,7 +176,6 @@ const UnifiedProductCard = ({
         />
       )}
 
-      {/* Snackbar Notification */}
       {!onSnackbar && (
         <SnackbarNotification
           open={snackbar.open}
