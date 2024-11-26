@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow } from "swiper/modules";
 import UnifiedProductCard from "../Product/UnifiedProductCard";
@@ -7,12 +9,16 @@ import mockProducts from "../../utils/mockProducts";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 
+gsap.registerPlugin(ScrollTrigger);
+
 const NewArrival = () => {
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
     severity: "success",
   });
+
+  const slidesRef = useRef([]);
 
   const handleSnackbar = (message, severity) => {
     setSnackbar({ open: true, message, severity });
@@ -22,8 +28,27 @@ const NewArrival = () => {
     setSnackbar({ ...snackbar, open: false });
   };
 
+  useEffect(() => {
+    slidesRef.current.forEach((slide, index) => {
+      if (slide) {
+        gsap.from(slide, {
+          opacity: 0,
+          y: 50,
+          duration: 0.5,
+          delay: index * 0.1, // Staggered animation
+          scrollTrigger: {
+            trigger: slide,
+            start: "top 80%",
+            end: "top 60%",
+            toggleActions: "play none none none",
+          },
+        });
+      }
+    });
+  }, []);
+
   return (
-    <div className="slider-container w-full mb-8 max-w-6xl mx-auto p-4">
+    <div className="slider-container w-full mb- py-10 max-w-6xl mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-3xl md:text-5xl font-bold">
           New <br />
@@ -51,9 +76,10 @@ const NewArrival = () => {
           }}
           className="swiper-container"
         >
-          {mockProducts.map((item) => (
+          {mockProducts.map((item, index) => (
             <SwiperSlide
               key={item.id}
+              ref={(el) => (slidesRef.current[index] = el)}
               style={{ width: "300px", height: "auto" }}
             >
               <UnifiedProductCard

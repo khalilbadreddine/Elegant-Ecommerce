@@ -81,28 +81,39 @@ const UnifiedProductCard = ({
   const getContainerClass = () => {
     switch (viewMode) {
       case "list":
-        return "flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-6 bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-6";
+        return "grid grid-cols-[auto_1fr] gap-6 items-stretch bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-6";
       case "desktoplist":
-        return "flex flex-row items-start space-x-8 bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-8";
+        return "grid grid-cols-[auto_2fr] gap-8 items-stretch bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-8";
       default:
-        return "flex flex-col bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-4";
+        return "flex flex-col border bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-4";
     }
   };
 
   const getImageClass = () => {
     switch (viewMode) {
       case "list":
-        return "w-full h-32 sm:h-40 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
+        return "h-full w-32 sm:w-40 md:w-48 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
       case "desktoplist":
-        return "w-full h-48 md:h-56 lg:h-64 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
+        return "h-full w-48 md:w-56 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
       default:
         return "w-full h-48 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
     }
   };
 
+  const getTextClass = () => {
+    switch (viewMode) {
+      case "list":
+        return "text-xs sm:text-sm"; // Smaller text for mobile in list view
+      case "desktoplist":
+        return "text-sm md:text-base"; // Standard text for desktop list
+      default:
+        return "text-sm"; // Default size for grid view
+    }
+  };
+
   return (
     <div className={getContainerClass()}>
-      <div className="relative group">
+      <div className="relative h-full">
         {product.oldPrice && (
           <span className="absolute top-3 left-3 bg-gradient-to-r from-green-400 to-green-500 text-white text-xs font-bold px-2 py-1 rounded-lg">
             -
@@ -127,25 +138,31 @@ const UnifiedProductCard = ({
         </button>
       </div>
 
-      <div className="flex flex-col mt-4">
-        <div className="flex items-center text-yellow-500 text-sm">
+      <div>
+        <div className={`flex items-center text-gray-500 ${getTextClass()}`}>
           {renderStars()}
-          <span className="text-sm text-gray-600 ml-2">
+          <span className={`ml-2 ${getTextClass()}`}>
             {product.rating.toFixed(1)} out of 5
           </span>
         </div>
-        <h3 className="font-medium text-gray-900 text-lg mt-2 line-clamp-1">
+        <h3
+          className={`font-medium text-gray-900 mt-2 line-clamp-1 ${getTextClass()}`}
+        >
           {product.title}
         </h3>
-        <p className="text-sm text-gray-600 mt-2 line-clamp-2">
+        <p className={`mt-2 line-clamp-2 text-gray-600 ${getTextClass()}`}>
           {getTruncatedDescription(product.description)}
         </p>
         <div className="flex items-center gap-2 mt-4">
-          <span className="text-gray-900 font-bold text-xl">
+          <span
+            className={`text-gray-900 font-bold ${
+              viewMode === "list" ? "text-lg" : "text-xl"
+            }`}
+          >
             ${product.price.toFixed(2)}
           </span>
           {product.oldPrice && (
-            <span className="text-gray-400 line-through text-sm">
+            <span className={`text-gray-400 line-through ${getTextClass()}`}>
               ${product.oldPrice.toFixed(2)}
             </span>
           )}
@@ -153,14 +170,14 @@ const UnifiedProductCard = ({
 
         <div className="flex items-center mt-4 space-x-2">
           <button
-            className="flex-1 border border-gray-400 text-gray-600 py-2 rounded-lg hover:border-gray-700 hover:text-gray-800 transition duration-200"
+            className={`flex-1 border border-gray-400 py-2 rounded-lg hover:border-gray-700 hover:text-gray-800 transition duration-200 ${getTextClass()}`}
             onClick={handleViewProduct}
           >
             {useNavigation ? "View Product" : "View Details"}
           </button>
           <button
             onClick={handleAddToCart}
-            className="flex-1 bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800 transition duration-200"
+            className={`flex-1 bg-gray-900 text-white py-2 rounded-lg hover:bg-gray-800 transition duration-200 ${getTextClass()}`}
           >
             Add to Cart
           </button>
