@@ -1,14 +1,13 @@
-import { useState, useRef } from "react";
-import Slider from "react-slick";
+import { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow } from "swiper/modules";
 import UnifiedProductCard from "../Product/UnifiedProductCard";
 import SnackbarNotification from "../Common/SnackbarNotification";
 import mockProducts from "../../utils/mockProducts";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import "swiper/css";
+import "swiper/css/effect-coverflow";
 
 const NewArrival = () => {
-  const [progress, setProgress] = useState(0);
-  const sliderRef = useRef(null);
   const [snackbar, setSnackbar] = useState({
     open: false,
     message: "",
@@ -21,43 +20,6 @@ const NewArrival = () => {
 
   const handleSnackbarClose = () => {
     setSnackbar({ ...snackbar, open: false });
-  };
-
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 200,
-    slidesToShow: 4, // Default number of slides to show
-    slidesToScroll: 1,
-    swipeToSlide: true,
-    afterChange: (currentSlide) => {
-      const totalSlides = mockProducts.length;
-      const slidesToShow =
-        sliderRef.current?.innerSlider?.props?.slidesToShow || 1;
-      const progressPercentage =
-        ((currentSlide + slidesToShow) / totalSlides) * 100;
-      setProgress(progressPercentage > 100 ? 100 : progressPercentage);
-    },
-    responsive: [
-      {
-        breakpoint: 1024, // Adjusts slides for tablets
-        settings: {
-          slidesToShow: 3,
-        },
-      },
-      {
-        breakpoint: 768, // Adjusts slides for small tablets
-        settings: {
-          slidesToShow: 2,
-        },
-      },
-      {
-        breakpoint: 480, // Adjusts slides for mobile devices
-        settings: {
-          slidesToShow: 1.2,
-        },
-      },
-    ],
   };
 
   return (
@@ -74,25 +36,35 @@ const NewArrival = () => {
           More Products →
         </a>
       </div>
-      <div className="relative">
-        <Slider ref={sliderRef} {...settings}>
+      <div className="relativ">
+        <Swiper
+          modules={[EffectCoverflow]}
+          effect="coverflow"
+          loop={true}
+          centeredSlides={true}
+          slidesPerView="auto"
+          coverflowEffect={{
+            rotate: 0,
+            stretch: 0,
+            depth: 100,
+            modifier: 2.5,
+          }}
+          className="swiper-container"
+        >
           {mockProducts.map((item) => (
-            <div key={item.id} className="px-2 mb-8">
+            <SwiperSlide
+              key={item.id}
+              style={{ width: "300px", height: "auto" }}
+            >
               <UnifiedProductCard
                 product={item}
                 onSnackbar={handleSnackbar}
                 viewMode="grid"
                 useNavigation={false}
               />
-            </div>
+            </SwiperSlide>
           ))}
-        </Slider>
-        <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-300">
-          <div
-            className="h-1 bg-black transition-all"
-            style={{ width: `${progress}%` }}
-          ></div>
-        </div>
+        </Swiper>
       </div>
       <div className="sm:hidden mt-4">
         <a href="#" className="text-md text-gray-700 hover:underline">
