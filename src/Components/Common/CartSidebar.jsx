@@ -1,36 +1,36 @@
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Snackbar, Alert, useMediaQuery } from "@mui/material";
 import CartProductCard from "../Product/CartProductCard";
 import {
   removeFromCart,
   updateCartQuantity,
 } from "../../redux/actions/cartActions";
+import { gsap } from "gsap";
 
 const CartSidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.cartItems);
 
-  // Snackbar state
+  const sidebarRef = useRef(null);
+  const itemsRef = useRef([]);
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  // Responsive breakpoint
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
-  // Calculate Subtotal
   const subtotal = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
 
-  // Handle quantity change
   const handleQuantityChange = (productId, newQuantity) => {
     dispatch(updateCartQuantity(productId, newQuantity));
     setSnackbarMessage("Cart updated");
@@ -38,13 +38,49 @@ const CartSidebar = ({ isOpen, onClose }) => {
     setSnackbarOpen(true);
   };
 
-  // Handle item removal
   const handleRemoveFromCart = (productId) => {
     dispatch(removeFromCart(productId));
     setSnackbarMessage("Item removed from cart");
     setSnackbarSeverity("info");
     setSnackbarOpen(true);
   };
+
+  // GSAP Animation for Sidebar and Items
+  useEffect(() => {
+    const sidebar = sidebarRef.current;
+
+    if (isOpen) {
+      // Sidebar entrance
+      gsap.to(sidebar, {
+        x: 0,
+        duration: 0.3,
+        ease: "power1.out",
+      });
+
+      // Items fade-in
+      gsap.to(itemsRef.current, {
+        opacity: 1,
+        stagger: 0.05,
+        duration: 0.3,
+        ease: "power1.out",
+      });
+    } else {
+      // Sidebar exit
+      gsap.to(sidebar, {
+        x: "100%",
+        duration: 0.3,
+        ease: "power1.in",
+      });
+
+      // Items fade-out
+      gsap.to(itemsRef.current, {
+        opacity: 0,
+        stagger: 0.05,
+        duration: 0.2,
+        ease: "power1.in",
+      });
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -58,9 +94,8 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg transition-transform transform ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        } z-50 flex flex-col`}
+        ref={sidebarRef}
+        className="fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full z-50 flex flex-col"
       >
         {/* Header */}
         <div className="p-4 flex justify-between items-center border-b">
@@ -72,7 +107,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
         {/* Cart Items Section */}
         <div className="flex-1 overflow-y-auto p-4">
-          {cartItems.map((item) => (
+          {cartItems.map((item, index) => (
             <CartProductCard
               key={item.id}
               productId={item.id}
@@ -85,6 +120,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
               onQuantityChange={(newQuantity) =>
                 handleQuantityChange(item.id, newQuantity)
               }
+              ref={(el) => (itemsRef.current[index] = el)} // Store item references
             />
           ))}
           {cartItems.length === 0 && (

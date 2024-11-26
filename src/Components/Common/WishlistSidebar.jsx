@@ -1,28 +1,29 @@
 import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Snackbar, Alert, useMediaQuery } from "@mui/material";
 import WishlistProductCard from "../Product/WishlistProductCard";
 import { removeFromWishlist } from "../../redux/actions/wishlistActions";
 import { addToCart } from "../../redux/actions/cartActions";
+import { gsap } from "gsap";
 
 const WishlistSidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
 
-  // Snackbar state
+  const sidebarRef = useRef(null);
+  const itemsRef = useRef([]);
+
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
   const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-  // Responsive breakpoint
   const isMobile = useMediaQuery("(max-width:600px)");
 
   const handleSnackbarClose = () => {
     setSnackbarOpen(false);
   };
 
-  // Function to add all wishlist items to the cart
   const addAllToCart = () => {
     wishlistItems.forEach((item) => dispatch(addToCart(item)));
     setSnackbarMessage("All wishlist items added to cart");
@@ -31,7 +32,6 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
     onClose();
   };
 
-  // Function to add individual item to cart
   const handleAddToCart = (item) => {
     dispatch(addToCart(item));
     setSnackbarMessage(`${item.title} added to cart`);
@@ -39,13 +39,48 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
     setSnackbarOpen(true);
   };
 
-  // Function to remove item from wishlist
   const handleRemoveFromWishlist = (itemId) => {
     dispatch(removeFromWishlist(itemId));
     setSnackbarMessage("Item removed from wishlist");
     setSnackbarSeverity("info");
     setSnackbarOpen(true);
   };
+
+  useEffect(() => {
+    const sidebar = sidebarRef.current;
+
+    if (isOpen) {
+      // Sidebar slide-in
+      gsap.to(sidebar, {
+        x: 0,
+        duration: 0.3,
+        ease: "power1.out",
+      });
+
+      // Items fade-in
+      gsap.to(itemsRef.current, {
+        opacity: 1,
+        stagger: 0.05,
+        duration: 0.3,
+        ease: "power1.out",
+      });
+    } else {
+      // Sidebar slide-out
+      gsap.to(sidebar, {
+        x: "100%",
+        duration: 0.3,
+        ease: "power1.in",
+      });
+
+      // Items fade-out
+      gsap.to(itemsRef.current, {
+        opacity: 0,
+        stagger: 0.05,
+        duration: 0.2,
+        ease: "power1.in",
+      });
+    }
+  }, [isOpen]);
 
   return (
     <>
@@ -59,9 +94,8 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg transition-transform transform ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        } z-50 flex flex-col`}
+        ref={sidebarRef}
+        className="fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full z-50 flex flex-col"
       >
         {/* Header */}
         <div className="p-4 flex justify-between items-center border-b">
@@ -73,7 +107,7 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
 
         {/* Wishlist Items */}
         <div className="flex-1 overflow-y-auto p-4">
-          {wishlistItems.map((item) => (
+          {wishlistItems.map((item, index) => (
             <WishlistProductCard
               key={item.id}
               productId={item.id}
@@ -83,6 +117,7 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
               price={item.price}
               onRemove={() => handleRemoveFromWishlist(item.id)}
               onAddToCart={() => handleAddToCart(item)}
+              ref={(el) => (itemsRef.current[index] = el)} // Store item references
             />
           ))}
           {wishlistItems.length === 0 && (

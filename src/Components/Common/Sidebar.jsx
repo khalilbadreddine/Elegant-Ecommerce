@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
 import {
   Cart,
   Close,
@@ -13,13 +15,13 @@ import {
 import { isAuthenticated, signOut } from "../../utils/auth";
 
 const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
+  const sidebarRef = useRef(null);
   const navigate = useNavigate();
   const cartItems = useSelector((state) => state.cart.cartItems);
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
   const cartCount = cartItems.length;
   const wishlistCount = wishlistItems.length;
 
-  // Handle Sign-In or Sign-Out action
   const handleSignInOrOut = () => {
     if (isAuthenticated()) {
       signOut();
@@ -31,15 +33,68 @@ const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
     onClose();
   };
 
+  // GSAP Animation
+  useEffect(() => {
+    const sidebar = sidebarRef.current;
+    const items = sidebar.querySelectorAll(".menu-item");
+
+    if (isOpen) {
+      // Sidebar entrance
+      gsap.fromTo(
+        sidebar,
+        { x: "-100%", opacity: 0 },
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power2.out",
+        }
+      );
+
+      // Menu items cascade
+      gsap.fromTo(
+        items,
+        { opacity: 0, y: 10 },
+        {
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
+          duration: 0.4,
+          ease: "power2.out",
+        }
+      );
+    } else {
+      // Sidebar exit
+      gsap.to(sidebar, {
+        x: "-100%",
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.in",
+      });
+
+      // Menu items cascade out
+      gsap.to(items, {
+        opacity: 0,
+        y: 10,
+        stagger: 0.05,
+        duration: 0.3,
+        ease: "power2.in",
+      });
+    }
+  }, [isOpen]);
+
   return (
     <div
-      className={`fixed top-0 left-0 h-full w-[60%] bg-white shadow-lg z-50 flex flex-col ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      } transition-transform duration-300`}
+      ref={sidebarRef}
+      className="fixed top-0 left-0 h-full w-[60%] bg-white shadow-lg z-50 flex flex-col"
+      style={{
+        transform: "translateX(-100%)",
+        overflow: "hidden",
+      }}
     >
       {/* Header */}
       <div className="p-4 flex justify-between items-center border-b border-gray-200">
-        <div className="text-lg font-bold">3legant.</div>
+        <div className="text-lg font-bold">Menu</div>
         <button onClick={onClose}>
           <Close className="w-3 h-3" />
         </button>
@@ -59,41 +114,22 @@ const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
 
       {/* Navigation Links */}
       <nav className="px-4 py-4 text-gray-700 text-sm flex-grow">
-        <NavLink
-          to="/"
-          className="block py-3 border-b border-gray-200"
-          onClick={onClose}
-        >
-          Home
-        </NavLink>
-        <NavLink
-          to="/shop"
-          className="block py-3 border-b border-gray-200"
-          onClick={onClose}
-        >
-          Shop
-        </NavLink>
-        <NavLink
-          to="/product"
-          className="block py-3 border-b border-gray-200"
-          onClick={onClose}
-        >
-          Product
-        </NavLink>
-        <NavLink
-          to="/contact"
-          className="block py-3 border-b border-gray-200"
-          onClick={onClose}
-        >
-          Contact Us
-        </NavLink>
+        {["Home", "Shop", "Product", "Contact Us"].map((item, index) => (
+          <NavLink
+            key={index}
+            to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+            className="menu-item block py-3 border-b border-gray-200"
+            onClick={onClose}
+          >
+            {item}
+          </NavLink>
+        ))}
       </nav>
 
       {/* Bottom Section */}
       <div className="p-4 border-t border-gray-200 space-y-4 text-sm">
-        {/* Cart */}
         <div
-          className="flex justify-between items-center cursor-pointer"
+          className="menu-item flex justify-between items-center cursor-pointer"
           onClick={() => {
             onCartClick();
             onClose();
@@ -106,9 +142,8 @@ const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
           </div>
         </div>
 
-        {/* Wishlist */}
         <div
-          className="flex justify-between items-center cursor-pointer"
+          className="menu-item flex justify-between items-center cursor-pointer"
           onClick={() => {
             onWishlistClick();
             onClose();
@@ -121,16 +156,14 @@ const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
           </div>
         </div>
 
-        {/* Sign In/Out */}
         <button
           onClick={handleSignInOrOut}
-          className="w-full bg-black text-white py-2 rounded-lg"
+          className="menu-item w-full bg-black text-white py-2 rounded-lg"
         >
           {isAuthenticated() ? "Sign Out" : "Sign In"}
         </button>
 
-        {/* Social Media Icons */}
-        <div className="flex justify-around border-t border-gray-200 pt-4">
+        <div className="menu-item flex justify-around border-t border-gray-200 pt-4">
           <Instagram className="w-5 h-5" />
           <Facebook className="w-5 h-5" />
           <YouTube className="w-5 h-5" />
