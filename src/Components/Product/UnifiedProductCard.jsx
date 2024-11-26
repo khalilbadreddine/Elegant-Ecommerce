@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../../redux/actions/cartActions";
@@ -22,15 +22,24 @@ const UnifiedProductCard = ({
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
   const isInWishlist = wishlistItems.some((item) => item.id === product.id);
 
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    severity: "success",
-  });
+  const [snackbarQueue, setSnackbarQueue] = useState([]); // Queue for Snackbar messages
+  const [currentSnackbar, setCurrentSnackbar] = useState(null); // Currently displayed Snackbar
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const handleSnackbarClose = () =>
-    setSnackbar((prev) => ({ ...prev, open: false }));
+  // Function to add a message to the Snackbar queue
+  const enqueueSnackbar = (message, severity) => {
+    setSnackbarQueue((prevQueue) => [...prevQueue, { message, severity }]);
+  };
+
+  // Effect to handle displaying Snackbar messages sequentially
+  useEffect(() => {
+    if (!currentSnackbar && snackbarQueue.length > 0) {
+      setCurrentSnackbar(snackbarQueue[0]); // Show the first message in the queue
+      setSnackbarQueue((prevQueue) => prevQueue.slice(1)); // Remove it from the queue
+    }
+  }, [currentSnackbar, snackbarQueue]);
+
+  const handleSnackbarClose = () => setCurrentSnackbar(null); // Clear current Snackbar
 
   const handleAddToCart = () => {
     dispatch(addToCart({ ...product, color: "Default" }));
@@ -38,7 +47,7 @@ const UnifiedProductCard = ({
     if (onSnackbar) {
       onSnackbar(message, "success");
     } else {
-      setSnackbar({ open: true, message, severity: "success" });
+      enqueueSnackbar(message, "success");
     }
   };
 
@@ -49,7 +58,7 @@ const UnifiedProductCard = ({
       if (onSnackbar) {
         onSnackbar(message, "info");
       } else {
-        setSnackbar({ open: true, message, severity: "info" });
+        enqueueSnackbar(message, "info");
       }
     } else {
       dispatch(addToWishlist(product));
@@ -57,7 +66,7 @@ const UnifiedProductCard = ({
       if (onSnackbar) {
         onSnackbar(message, "success");
       } else {
-        setSnackbar({ open: true, message, severity: "success" });
+        enqueueSnackbar(message, "success");
       }
     }
   };
@@ -193,12 +202,13 @@ const UnifiedProductCard = ({
         />
       )}
 
-      {!onSnackbar && (
+      {/* Render current Snackbar */}
+      {currentSnackbar && (
         <SnackbarNotification
-          open={snackbar.open}
+          open={Boolean(currentSnackbar)}
           onClose={handleSnackbarClose}
-          message={snackbar.message}
-          severity={snackbar.severity}
+          message={currentSnackbar.message}
+          severity={currentSnackbar.severity}
         />
       )}
     </div>
