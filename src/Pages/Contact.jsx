@@ -17,7 +17,8 @@ const Contact = () => {
           color="blue-gray"
           className="font-bold mb-6 text-3xl md:text-4xl lg:text-5xl"
         >
-          We believe in sustainable decor. We’re passionate about life at home.
+          We believe in sustainable decor. We’re passionate about life at home
+          :).
         </Typography>
         <Typography
           variant="paragraph"
