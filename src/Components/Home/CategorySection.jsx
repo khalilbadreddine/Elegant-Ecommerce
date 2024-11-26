@@ -1,8 +1,7 @@
-import couchGray from "/assets/couch-gray.png";
-import plakar from "/assets/plakar.png";
-import toast from "/assets/toast.png";
-
 const CategorySection = () => {
+  const couchGray = "https://i.ibb.co/gSMKcrM/couch-gray.png";
+  const plakar = "https://i.ibb.co/mhxzGRz/plakar.png";
+  const toast = "https://i.ibb.co/NpRT8Xq/toast.png";
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
       {/* Living Room Section */}

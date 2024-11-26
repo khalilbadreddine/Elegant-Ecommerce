@@ -18,7 +18,7 @@ function Shop() {
 
   const [viewMode, setViewMode] = useState("grid"); // Default: 'grid'
   const [currentPage, setCurrentPage] = useState(1); // Current page number
-  const itemsPerPage = 4; // Number of products per page
+  const itemsPerPage = 8; // Number of products per page
 
   // Automatically adjust view mode based on screen size
   useEffect(() => {

@@ -7,7 +7,7 @@ const mockProducts = [
     oldPrice: 1399.99,
     rating: 4.9,
     category: "Furniture",
-    description: "Luxurious and spacious sofa set that elevates your living room's comfort and style.",
+    description: "Redefine comfort and style in your living room with this luxurious and spacious contemporary sofa set, crafted with stain-resistant upholstery and a solid wood frame for durability.",
     dateAdded: "2024-10-20",
     sales: 210,
     images: [
@@ -36,7 +36,7 @@ const mockProducts = [
     oldPrice: 1199.99,
     rating: 4.8,
     category: "Furniture",
-    description: "Elegant marble dining table that adds a touch of sophistication to any dining area.",
+    description: "Transform your dining area with this elegant marble table featuring a polished surface, a sturdy base with anti-scratch pads, and room to comfortably seat up to six people.",
     dateAdded: "2024-09-28",
     sales: 300,
     images: [
@@ -65,7 +65,7 @@ const mockProducts = [
     oldPrice: 399.99,
     rating: 4.7,
     category: "Office",
-    description: "Comfortable ergonomic office chair designed to support long working hours.",
+    description: "Enhance your productivity with this ergonomic office chair designed for long hours of use, featuring adjustable height, lumbar support, and breathable mesh material for extra comfort.",
     dateAdded: "2024-08-18",
     sales: 250,
     images: [
@@ -94,7 +94,7 @@ const mockProducts = [
     oldPrice: 249.99,
     rating: 4.6,
     category: "Furniture",
-    description: "Sleek and modern coffee table to complement your living space.",
+    description:"Bring modern simplicity to your living space with this sleek coffee table, offering a scratch-resistant wood veneer surface and ample space for decor and daily essentials.",
     dateAdded: "2024-10-01",
     sales: 180,
     images: [
@@ -123,7 +123,7 @@ const mockProducts = [
     oldPrice: 109.99,
     rating: 4.5,
     category: "Decor",
-    description: "Energy-efficient LED lamp with adjustable brightness to suit any mood or occasion.",
+    description: "Brighten your home with this energy-efficient LED lamp, designed with adjustable brightness settings, a modern aesthetic, and a power-saving design for long-lasting use.",
     dateAdded: "2024-09-12",
     sales: 160,
     images: [
@@ -152,7 +152,7 @@ const mockProducts = [
     oldPrice: 699.99,
     rating: 4.8,
     category: "Furniture",
-    description: "Stylish mid-century armchair with plush cushioning that offers both comfort and elegance.",
+    description:"Add timeless charm to any room with this mid-century modern armchair, featuring plush cushioning, a lightweight frame, and premium faux leather upholstery for comfort and style.",
     dateAdded: "2024-10-15",
     sales: 220,
     images: [
@@ -181,7 +181,7 @@ const mockProducts = [
     oldPrice: null,
     rating: 4.7,
     category: "Furniture",
-    description: "Spacious and sturdy wooden bookshelf ideal for home or office use.",
+    description: "Organize and display your books, decor, or personal items with this spacious wooden bookshelf, crafted from durable materials to blend seamlessly with any interior design.",
     dateAdded: "2024-08-10",
     sales: 140,
     images: [
@@ -210,7 +210,7 @@ const mockProducts = [
     oldPrice: 79.99,
     rating: 4.3,
     category: "Kitchen",
-    description: "Durable stainless steel kettle with a quick boil feature.",
+    description: "Enjoy efficient and quick boiling with this stainless steel kettle, featuring an ergonomic handle, a sleek and easy-to-clean design, and a durable build for everyday use.",
     dateAdded: "2024-07-22",
     sales: 120,
     images: [
@@ -239,7 +239,7 @@ const mockProducts = [
     oldPrice: 349.99,
     rating: 4.9,
     category: "Kitchen",
-    description: "Blend smoothies, soups, and sauces effortlessly.",
+    description: "Blend smoothies, soups, and sauces effortlessly with this high-performance blender, equipped with a powerful motor, durable stainless steel blades, and a compact, space-saving design.",
     dateAdded: "2024-10-15",
     sales: 250,
     images: [
@@ -268,7 +268,7 @@ const mockProducts = [
     oldPrice: 299.99,
     rating: 4.8,
     category: "Electronics",
-    description: "Immerse yourself in high-quality sound.",
+    description:"Immerse yourself in superior audio quality with these wireless noise-canceling headphones, designed with active noise cancellation, Bluetooth connectivity, and long-lasting comfort.",
     dateAdded: "2024-09-28",
     sales: 320,
     images: [
@@ -297,7 +297,7 @@ const mockProducts = [
     oldPrice: 749.99,
     rating: 4.7,
     category: "Office",
-    description: "Promote better posture with this adjustable desk.",
+    description: "Promote better posture and productivity with this adjustable standing desk, featuring a smooth height adjustment mechanism and a sturdy steel frame to support heavy equipment.",
     dateAdded: "2024-08-20",
     sales: 200,
     images: [
@@ -326,7 +326,7 @@ const mockProducts = [
     oldPrice: 399.99,
     rating: 4.9,
     category: "Kitchen",
-    description: "Upgrade your kitchen with this premium cookware set.",
+    description: "Upgrade your kitchen with this premium stainless steel cookware set, offering superior heat distribution, a non-stick surface for easy cleaning, and compatibility with all stovetops.",
     dateAdded: "2024-11-05",
     sales: 260,
     images: [
@@ -355,7 +355,7 @@ const mockProducts = [
     oldPrice: 219.99,
     rating: 4.8,
     category: "Bedroom",
-    description: "Sleep soundly with this eco-friendly bedding set.",
+    description: "Sleep in ultimate comfort with this eco-friendly bamboo bedding set, featuring breathable, hypoallergenic fabric that is soft to the touch and sustainably sourced for an eco-conscious lifestyle.",
     dateAdded: "2024-10-22",
     sales: 190,
     images: [
@@ -384,7 +384,7 @@ const mockProducts = [
     oldPrice: 89.99,
     rating: 4.5,
     category: "Home Decor",
-    description: "Enhance your decor with this sleek and modern wall clock.",
+    description: "Enhance your home’s decor with this modern wall clock, designed with a minimalist aesthetic, silent quartz movement, and a durable build that complements any room style.",
     dateAdded: "2024-09-18",
     sales: 150,
     images: [
@@ -413,7 +413,7 @@ const mockProducts = [
     oldPrice: 1499.99,
     rating: 4.9,
     category: "Electronics",
-    description: "Capture stunning photos with this professional DSLR camera.",
+    description: "Capture breathtaking photos and videos with this professional DSLR camera, featuring advanced shooting modes, interchangeable lenses, and a durable design for all environments.",
     dateAdded: "2024-08-30",
     sales: 310,
     images: [
@@ -442,7 +442,7 @@ const mockProducts = [
     oldPrice: 999.99,
     rating: 4.6,
     category: "Fitness",
-    description: "Stay active at home with this compact treadmill.",
+    description: "Stay active and maintain your fitness goals with this compact home treadmill, offering multiple speed settings, a foldable design for easy storage, and a quiet, powerful motor.",
     dateAdded: "2024-07-15",
     sales: 220,
     images: [
@@ -471,7 +471,7 @@ const mockProducts = [
     oldPrice: 1299.99,
     rating: 4.7,
     category: "Bedroom",
-    description: "Transform your sleep experience with this adjustable bed frame.",
+    description: "Transform your sleeping experience with this electric adjustable bed frame, designed with customizable settings, a durable metal frame, and compatibility with most mattress types.",
     dateAdded: "2024-10-08",
     sales: 180,
     images: [
