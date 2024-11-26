@@ -1,5 +1,5 @@
 // src/Pages/SignUp.jsx
-import couchImage from "/assets/couch2.png"; // Import the image
+import couchImage from "https://i.ibb.co/v1fX5fH/couch2.png"; // Import the image
 
 const SignUp = () => {
   return (
