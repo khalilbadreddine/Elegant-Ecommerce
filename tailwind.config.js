@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // tailwind.config.js
 const withMT = require("@material-tailwind/react/utils/withMT");
 

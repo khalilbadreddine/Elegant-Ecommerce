@@ -86,7 +86,7 @@ const UnifiedProductCard = ({
       case "desktoplist":
         return "flex flex-row items-start space-x-8 bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg transition-shadow duration-300 p-8";
       default:
-        return "flex flex-col bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg transition-shadow duration-300 p-4";
+        return "flex flex-col bg-[#FFFFFF] shadow-md hover:shadow-lg rounded-lg transition-shadow duration-300 p-2";
     }
   };
 
@@ -117,6 +117,7 @@ const UnifiedProductCard = ({
           src={product.image}
           alt={product.title}
           className={getImageClass()}
+          loading="lazy"
         />
         <button
           onClick={handleWishlistToggle}
@@ -127,33 +128,33 @@ const UnifiedProductCard = ({
         </button>
       </div>
 
-      <div className="flex flex-col mt-4 sm:mt-0 sm:ml-6">
+      <div className="flex flex-col mt-4 sm:mt-0">
         <div className="flex items-center text-yellow-400 text-sm">
           {renderStars()}
           <span className="text-sm text-[#6C7275] ml-2">
             {product.rating.toFixed(1)} out of 5
           </span>
         </div>
-        <h3 className="font-semibold text-[#141718] text-lg mt-2 line-clamp-1">
+        <h3 className="font-medium text-[#141718] text-lg sm:text-base sm:font-normal mt-2 line-clamp-1">
           {product.title}
         </h3>
         <p className="text-sm text-[#6C7275] mt-2 line-clamp-2">
           {getTruncatedDescription(product.description)}
         </p>
         <div className="flex items-center gap-2 mt-4">
-          <span className="text-[#141718] font-bold text-xl">
+          <span className="text-[#141718] font-bold text-xl sm:text-lg">
             ${product.price.toFixed(2)}
           </span>
           {product.oldPrice && (
-            <span className="text-[#BEC0C0] line-through text-sm">
+            <span className="text-[#BEC0C0] line-through text-sm sm:text-xs">
               ${product.oldPrice.toFixed(2)}
             </span>
           )}
         </div>
 
-        <div className="mt-auto flex items-center space-x-2">
+        <div className="flex items-center mt-4 space-x-2">
           <button
-            className="flex-1 bg-[#232627] text-white py-2 rounded-lg hover:bg-[#343839] transition-colors duration-200 text-sm sm:text-base"
+            className="flex-1 border border-gray-400 text-gray-600 py-2 rounded-lg hover:border-gray-700 hover:text-gray-800 transition-colors duration-200 text-sm sm:text-base"
             onClick={handleViewProduct}
           >
             {useNavigation ? "View Product" : "View Details"}
@@ -204,4 +205,3 @@ UnifiedProductCard.propTypes = {
 };
 
 export default UnifiedProductCard;
-//dont know why
