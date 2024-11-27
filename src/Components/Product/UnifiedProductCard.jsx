@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../../redux/actions/cartActions";
@@ -34,9 +34,9 @@ const UnifiedProductCard = ({
   const [currentSnackbar, setCurrentSnackbar] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  const enqueueSnackbar = (message, severity) => {
+  const enqueueSnackbar = useCallback((message, severity) => {
     setSnackbarQueue((prevQueue) => [...prevQueue, { message, severity }]);
-  };
+  }, []);
 
   useEffect(() => {
     if (!currentSnackbar && snackbarQueue.length > 0) {
@@ -75,34 +75,25 @@ const UnifiedProductCard = ({
     useNavigation ? navigate(`/product/${product.id}`) : setIsDialogOpen(true);
   };
 
-  const getTruncatedDescription = (text, maxLength = 80) => {
-    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  const getTruncatedDescription = (text, maxLength = 80) =>
+    text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+
+  const containerClasses = {
+    grid: "flex flex-col border bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-4",
+    list: "grid grid-cols-[auto_1fr] gap-6 items-stretch bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-6",
+    desktoplist:
+      "grid grid-cols-[auto_2fr] gap-8 items-stretch bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-8",
   };
 
-  const getContainerClass = () => {
-    switch (viewMode) {
-      case "list":
-        return "grid grid-cols-[auto_1fr] gap-6 items-stretch bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-6";
-      case "desktoplist":
-        return "grid grid-cols-[auto_2fr] gap-8 items-stretch bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-8";
-      default:
-        return "flex flex-col border bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-4";
-    }
-  };
-
-  const getImageClass = () => {
-    switch (viewMode) {
-      case "list":
-        return "h-full w-32 sm:w-40 md:w-48 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
-      case "desktoplist":
-        return "h-full w-48 md:w-56 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
-      default:
-        return "w-full h-48 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105";
-    }
+  const imageClasses = {
+    grid: "w-full h-48 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105",
+    list: "h-full w-32 sm:w-40 md:w-48 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105",
+    desktoplist:
+      "h-full w-48 md:w-56 object-cover rounded-lg transition-transform duration-300 group-hover:scale-105",
   };
 
   return (
-    <div className={getContainerClass()}>
+    <div className={containerClasses[viewMode]}>
       <div className="relative h-full">
         {product.oldPrice && (
           <span className="absolute top-3 left-3 bg-gradient-to-r from-green-400 to-green-500 text-white text-xs font-bold px-2 py-1 rounded-lg">
@@ -116,7 +107,7 @@ const UnifiedProductCard = ({
         <img
           src={transformedImage}
           alt={product.title}
-          className={getImageClass()}
+          className={imageClasses[viewMode]}
           loading="lazy"
         />
         <button

@@ -30,21 +30,19 @@ const NewArrival = () => {
   };
 
   useEffect(() => {
-    slidesRef.current.forEach((slide, index) => {
-      if (slide) {
-        gsap.from(slide, {
-          opacity: 0,
-          y: 50,
+    // Batch animation for better performance
+    ScrollTrigger.batch(slidesRef.current, {
+      start: "top 80%",
+      end: "top 60%",
+      toggleActions: "play none none none",
+      onEnter: (batch) => {
+        gsap.to(batch, {
+          opacity: 1,
+          y: 0,
+          stagger: 0.1,
           duration: 0.5,
-          delay: index * 0.1, // Staggered animation
-          scrollTrigger: {
-            trigger: slide,
-            start: "top 80%",
-            end: "top 60%",
-            toggleActions: "play none none none",
-          },
         });
-      }
+      },
     });
   }, []);
 
@@ -69,6 +67,7 @@ const NewArrival = () => {
           loop={true}
           centeredSlides={true}
           slidesPerView="auto"
+          lazy={true}
           coverflowEffect={{
             rotate: 0,
             stretch: 0,
