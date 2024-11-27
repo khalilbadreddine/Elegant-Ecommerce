@@ -6,6 +6,7 @@ import { EffectCoverflow } from "swiper/modules";
 import UnifiedProductCard from "../Product/UnifiedProductCard";
 import SnackbarNotification from "../Common/SnackbarNotification";
 import mockProducts from "../../utils/mockProducts";
+import { generateCloudinaryUrl } from "../../utils/cloudinaryUtils";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 
@@ -48,7 +49,7 @@ const NewArrival = () => {
   }, []);
 
   return (
-    <div className="slider-container w-full mb- py-10 max-w-6xl mx-auto p-4">
+    <div className="slider-container w-full py-10 max-w-6xl mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-3xl md:text-5xl font-bold">
           New <br />
@@ -61,7 +62,7 @@ const NewArrival = () => {
           More Products →
         </a>
       </div>
-      <div className="relativ">
+      <div className="relative">
         <Swiper
           modules={[EffectCoverflow]}
           effect="coverflow"
@@ -76,20 +77,27 @@ const NewArrival = () => {
           }}
           className="swiper-container"
         >
-          {mockProducts.map((item, index) => (
-            <SwiperSlide
-              key={item.id}
-              ref={(el) => (slidesRef.current[index] = el)}
-              style={{ width: "300px", height: "auto" }}
-            >
-              <UnifiedProductCard
-                product={item}
-                onSnackbar={handleSnackbar}
-                viewMode="grid"
-                useNavigation={false}
-              />
-            </SwiperSlide>
-          ))}
+          {mockProducts.map((item, index) => {
+            const transformedImage = generateCloudinaryUrl(
+              item.image,
+              "w_500,h_500,c_fill,q_auto,f_auto"
+            );
+
+            return (
+              <SwiperSlide
+                key={item.id}
+                ref={(el) => (slidesRef.current[index] = el)}
+                style={{ width: "300px", height: "auto" }}
+              >
+                <UnifiedProductCard
+                  product={{ ...item, image: transformedImage }}
+                  onSnackbar={handleSnackbar}
+                  viewMode="grid"
+                  useNavigation={false}
+                />
+              </SwiperSlide>
+            );
+          })}
         </Swiper>
       </div>
       <div className="sm:hidden mt-4">

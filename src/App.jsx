@@ -19,6 +19,8 @@ function App() {
           {/* Main layout with nested routes */}
           <Route path="/" element={<MainLayout />}>
             <Route index element={<Home />} />
+            <Route path="home" element={<Home />} />{" "}
+            {/* Added route for /home */}
             <Route path="shop" element={<Shop />} />
             <Route path="product/:productId" element={<Product />} />
             <Route path="contact" element={<Contact />} />

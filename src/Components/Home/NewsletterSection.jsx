@@ -58,7 +58,7 @@ const NewsletterSection = () => {
   return (
     <div className="flex flex-col md:flex-row items-center justify-between p-4 md:p-0 bg-gray-100 gap-4">
       <StyledImage
-        src="/assets/couch-gray.png"
+        src="https://i.ibb.co/v1fX5fH/couch2.png"
         alt="Left side"
         className="hidden md:block"
       />
@@ -92,7 +92,7 @@ const NewsletterSection = () => {
       </div>
 
       <StyledImage
-        src="/assets/couch2.png"
+        src="https://i.ibb.co/v1fX5fH/couch2.png"
         alt="Right side"
         className="hidden md:block"
       />
