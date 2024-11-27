@@ -97,7 +97,7 @@ export const Cart = (props) => (
 );
 
 // Close Icon React.forwardRef((props, ref) =>
-export const Close =React.forwardRef((props, ref) => (
+export const Close = (props) => (
   <svg
     width="14"
     height="14"
