@@ -10,36 +10,35 @@ import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
 import Profile from "./Pages/Profile";
 import ProtectedRoute from "./Components/Layout/ProtectedRoute";
+import LoadingWrapper from "./Components/Common/LoadingWrapper"; // New wrapper component
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Routes>
-          {/* Main layout with nested routes */}
-          <Route path="/" element={<MainLayout />}>
-            <Route index element={<Home />} />
-            <Route path="home" element={<Home />} />{" "}
-            {/* Added route for /home */}
-            <Route path="shop" element={<Shop />} />
-            <Route path="product/:productId" element={<Product />} />
-            <Route path="contact" element={<Contact />} />
-          </Route>
-
-          {/* Standalone routes */}
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-
-          {/* Protected routes */}
-          <Route
-            path="/profile"
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        <LoadingWrapper>
+          {" "}
+          {/* Handles loading logic */}
+          <Routes>
+            <Route path="/" element={<MainLayout />}>
+              <Route index element={<Home />} />
+              <Route path="home" element={<Home />} />
+              <Route path="shop" element={<Shop />} />
+              <Route path="product/:productId" element={<Product />} />
+              <Route path="contact" element={<Contact />} />
+            </Route>
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </LoadingWrapper>
       </Router>
     </Provider>
   );
