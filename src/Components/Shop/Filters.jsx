@@ -1,6 +1,6 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { List, Grid, GridList } from "../Common/Icons";
+import { List, DesktopListIcon, GridList } from "../Common/Icons";
 import {
   Menu,
   MenuHandler,
@@ -91,7 +91,7 @@ function Filters({ onFilterChange, onSortChange, onViewChange, viewMode }) {
           }`}
           onClick={() => onViewChange("grid")}
         >
-          <Grid />
+          <DesktopListIcon />
         </button>
         <button
           className={`p-2 border rounded-md sm:hidden transition ${

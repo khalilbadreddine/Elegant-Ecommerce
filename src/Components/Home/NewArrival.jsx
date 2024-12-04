@@ -2,13 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow } from "swiper/modules";
+import { Navigation } from "swiper/modules";
 import UnifiedProductCard from "../Product/UnifiedProductCard";
 import SnackbarNotification from "../Common/SnackbarNotification";
 import mockProducts from "../../utils/mockProducts";
 import { generateCloudinaryUrl } from "../../utils/cloudinaryUtils";
 import "swiper/css";
-import "swiper/css/effect-coverflow";
+import "swiper/css/navigation";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,7 +30,6 @@ const NewArrival = () => {
   };
 
   useEffect(() => {
-    // Batch animation for better performance
     ScrollTrigger.batch(slidesRef.current, {
       start: "top 80%",
       end: "top 60%",
@@ -62,18 +61,13 @@ const NewArrival = () => {
       </div>
       <div className="relative">
         <Swiper
-          modules={[EffectCoverflow]}
-          effect="coverflow"
+          modules={[Navigation]}
+          navigation={true}
           loop={true}
           centeredSlides={true}
           slidesPerView="auto"
+          freeMode={true}
           lazy={true}
-          coverflowEffect={{
-            rotate: 0,
-            stretch: 0,
-            depth: 100,
-            modifier: 2.5,
-          }}
           className="swiper-container"
         >
           {mockProducts.map((item, index) => {
