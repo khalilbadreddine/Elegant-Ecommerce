@@ -77,7 +77,7 @@ const NewArrival = () => {
   }
 
   return (
-    <div className="slider-container w-full py-10 max-w-6xl mx-auto p-4">
+    <div className="slider-container w-full py-10 max-w-6xl mx-auto p-4 ">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-3xl md:text-5xl font-bold">
           New <br />
@@ -90,7 +90,7 @@ const NewArrival = () => {
           More Products →
         </a>
       </div>
-      <div className="relative">
+      <div className="relative bg-[#F3F5F7] p-8 rounded-lg">
         <Swiper
           modules={[Navigation]}
           navigation={true}
@@ -102,6 +102,7 @@ const NewArrival = () => {
           className="swiper-container"
         >
           {products.map((item, index) => {
+            console.log(item)
             const id = item._id; // Map _id to id for compatibility
             if (!id) {
               console.warn(`Product at index ${index} is missing an id.`);
@@ -117,7 +118,7 @@ const NewArrival = () => {
               <SwiperSlide
                 key={id} // Use the id for the key
                 ref={(el) => (slidesRef.current[index] = el)}
-                style={{ width: "300px", height: "auto" }}
+                style={{ width: "300px", height: "auto" ,padding:"10px"}}
               >
                 <UnifiedProductCard
                   product={{ ...item, id, image: transformedImage }} // Pass id and transformed image

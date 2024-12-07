@@ -24,12 +24,14 @@ const Product = () => {
   });
 
   // Check if the product is in the wishlist
-  const isInWishlist = wishlistItems.some((item) => item.id === parseInt(productId, 10));
+  const isInWishlist = wishlistItems.some((item) => item.id === productId);
 
   // Fetch product data on mount
   useEffect(() => {
-    dispatch(fetchProductById(parseInt(productId, 10)));
-  }, [dispatch, productId]);
+    if (!product || product._id !== productId) {
+      dispatch(fetchProductById(productId));
+    }
+  }, [dispatch, productId, product]);
 
   // Countdown timer state
   const [timeLeft, setTimeLeft] = useState({
@@ -43,10 +45,11 @@ const Product = () => {
   useEffect(() => {
     if (!product?.offerExpiry) return;
 
+    const expiryTime = new Date(product.offerExpiry).getTime();
+
     const calculateTimeLeft = () => {
-      const now = new Date();
-      const expiry = new Date(product.offerExpiry);
-      const difference = expiry - now;
+      const now = Date.now();
+      const difference = expiryTime - now;
 
       if (difference > 0) {
         setTimeLeft({
@@ -60,7 +63,9 @@ const Product = () => {
       }
     };
 
+    calculateTimeLeft();
     const interval = setInterval(calculateTimeLeft, 1000);
+
     return () => clearInterval(interval);
   }, [product?.offerExpiry]);
 
@@ -69,7 +74,7 @@ const Product = () => {
 
   // Add to cart handler
   const handleAddToCart = () => {
-    dispatch(addToCart(product.id));
+    dispatch(addToCart(product._id));
     setSnackbar({
       open: true,
       message: "Product added to cart!",
@@ -80,14 +85,14 @@ const Product = () => {
   // Wishlist toggle handler
   const handleWishlistToggle = () => {
     if (isInWishlist) {
-      dispatch(removeFromWishlist(product.id));
+      dispatch(removeFromWishlist(product._id));
       setSnackbar({
         open: true,
         message: "Product removed from wishlist!",
         severity: "info",
       });
     } else {
-      dispatch(addToWishlist(product.id));
+      dispatch(addToWishlist(product._id));
       setSnackbar({
         open: true,
         message: "Product added to wishlist!",
@@ -112,46 +117,86 @@ const Product = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Image Section */}
           <div className="relative">
-            <Swiper spaceBetween={10} slidesPerView={1} loop={true}>
+            {/* Mobile Swiper */}
+            <div className="block md:hidden">
+              <Swiper spaceBetween={10} slidesPerView={1} loop={true}>
+                {product.images.map((image, index) => (
+                  <SwiperSlide key={index}>
+                    <div className="w-full h-64 bg-gray-300 flex items-center justify-center rounded-lg">
+                      <img
+                        src={image}
+                        alt={product.title}
+                        className="w-full h-64 object-cover rounded-lg"
+                      />
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+            {/* Desktop Grid */}
+            <div className="hidden md:grid grid-cols-3 gap-4 md:h-[500px]">
               {product.images.map((image, index) => (
-                <SwiperSlide key={index}>
-                  <div className="w-full h-64 bg-gray-300 flex items-center justify-center rounded-lg">
-                    <img src={image} alt={product.title} className="w-full h-64 object-cover rounded-lg" />
-                  </div>
-                </SwiperSlide>
+                <div
+                  key={index}
+                  className="w-full h-full bg-gray-300 flex items-center justify-center rounded-lg"
+                >
+                  <img
+                    src={image}
+                    alt={product.title}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
               ))}
-            </Swiper>
+            </div>
           </div>
 
           {/* Product Details */}
           <div>
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
             <p className="text-gray-600 text-sm mb-4">{product.description}</p>
+            <p className="text-gray-500 text-sm mb-4">
+              ★★★★★ ({product.sales} Sales)
+            </p>
+
             <div className="mb-4">
-              <span className="text-3xl font-bold text-gray-800">${product.price.toFixed(2)}</span>
+              <span className="text-3xl font-bold text-gray-800">
+                ${product.price.toFixed(2)}
+              </span>
               {product.oldPrice && (
-                <span className="text-gray-400 line-through ml-2">${product.oldPrice.toFixed(2)}</span>
+                <span className="text-gray-400 line-through ml-2">
+                  ${product.oldPrice.toFixed(2)}
+                </span>
               )}
             </div>
 
             {product.offerExpiry && (
               <div className="mb-4">
-                <p className="text-sm font-semibold text-gray-700 mb-2">Offer expires in:</p>
-                <div className="flex items-center gap-4">
+                <p className="text-sm font-semibold text-gray-700 mb-2">
+                  Offer expires in:
+                </p>
+                <div className="flex items-center gap-4 text-center">
                   <div>
-                    <div className="text-lg font-bold">{timeLeft.days}</div>
+                    <div className="text-lg font-bold text-gray-800">
+                      {timeLeft.days}
+                    </div>
                     <p className="text-xs text-gray-500">Days</p>
                   </div>
                   <div>
-                    <div className="text-lg font-bold">{timeLeft.hours}</div>
+                    <div className="text-lg font-bold text-gray-800">
+                      {timeLeft.hours}
+                    </div>
                     <p className="text-xs text-gray-500">Hours</p>
                   </div>
                   <div>
-                    <div className="text-lg font-bold">{timeLeft.minutes}</div>
+                    <div className="text-lg font-bold text-gray-800">
+                      {timeLeft.minutes}
+                    </div>
                     <p className="text-xs text-gray-500">Minutes</p>
                   </div>
                   <div>
-                    <div className="text-lg font-bold">{timeLeft.seconds}</div>
+                    <div className="text-lg font-bold text-gray-800">
+                      {timeLeft.seconds}
+                    </div>
                     <p className="text-xs text-gray-500">Seconds</p>
                   </div>
                 </div>
@@ -171,6 +216,17 @@ const Product = () => {
               >
                 {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               </button>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-bold mb-2">Additional Info</h2>
+              <ul className="list-disc pl-5">
+                {product.additionalInfo.map((info, index) => (
+                  <li key={index} className="text-sm text-gray-700 mb-2">
+                    {info}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>

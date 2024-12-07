@@ -15,14 +15,6 @@ const UnifiedProductCard = ({
   viewMode = "grid",
   useNavigation = false,
 }) => {
-  // Generate transformed image URL
-  const transformedImage = generateCloudinaryUrl(
-    product.image,
-    viewMode === "list"
-      ? "w_300,h_300,c_fill,q_auto,f_auto"
-      : "w_500,h_500,c_fill,q_auto,f_auto"
-  );
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -67,11 +59,21 @@ const UnifiedProductCard = ({
   };
 
   const handleViewProduct = () => {
-    useNavigation ? navigate(`/product/${product.id}`) : setIsDialogOpen(true);
+    useNavigation ? navigate(`/product/${product._id}`) : setIsDialogOpen(true);
   };
 
   const getTruncatedDescription = (text, maxLength = 80) =>
     text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+
+  // Extract the primary image or use a placeholder
+  const primaryImage =
+    product.images?.[0] || "https://via.placeholder.com/500x500?text=No+Image";
+  const transformedImage = generateCloudinaryUrl(
+    primaryImage,
+    viewMode === "list"
+      ? "w_300,h_300,c_fill,q_auto,f_auto"
+      : "w_500,h_500,c_fill,q_auto,f_auto"
+  );
 
   const containerClasses = {
     grid: "flex flex-col border bg-white shadow-md hover:shadow-xl rounded-lg transition-shadow duration-300 p-4",
@@ -170,8 +172,8 @@ const UnifiedProductCard = ({
 
 UnifiedProductCard.propTypes = {
   product: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    image: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired, // Use `_id` here
+    images: PropTypes.arrayOf(PropTypes.string).isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
     oldPrice: PropTypes.number,
@@ -182,5 +184,6 @@ UnifiedProductCard.propTypes = {
   viewMode: PropTypes.oneOf(["grid", "list", "desktoplist"]),
   useNavigation: PropTypes.bool,
 };
+
 
 export default UnifiedProductCard;

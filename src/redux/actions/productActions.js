@@ -35,6 +35,7 @@ export const fetchProductById = (id) => async (dispatch) => {
   try {
     dispatch({ type: FETCH_PRODUCT_REQUEST });
     const { data } = await api.get(`/products/${id}`);
+    console.log(data);
     dispatch({ type: FETCH_PRODUCT_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
