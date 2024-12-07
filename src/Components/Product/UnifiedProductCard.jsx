@@ -3,10 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addToCart } from "../../redux/actions/cartActions";
-import {
-  addToWishlist,
-  removeFromWishlist,
-} from "../../redux/actions/wishlistActions";
+import { addToWishlist, removeFromWishlist } from "../../redux/actions/wishlistActions";
 import ProductDialog from "../Common/ProductDialog";
 import SnackbarNotification from "../Common/SnackbarNotification";
 import { HeartIcon, FiveStars } from "../Common/Icons";
@@ -18,6 +15,7 @@ const UnifiedProductCard = ({
   viewMode = "grid",
   useNavigation = false,
 }) => {
+  // Generate transformed image URL
   const transformedImage = generateCloudinaryUrl(
     product.image,
     viewMode === "list"
@@ -27,6 +25,7 @@ const UnifiedProductCard = ({
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
   const isInWishlist = wishlistItems.some((item) => item.id === product.id);
 
@@ -48,7 +47,7 @@ const UnifiedProductCard = ({
   const handleSnackbarClose = () => setCurrentSnackbar(null);
 
   const handleAddToCart = () => {
-    dispatch(addToCart({ ...product, color: "Default" }));
+    dispatch(addToCart(product.id));
     const message = "Product added to cart";
     onSnackbar
       ? onSnackbar(message, "success")
@@ -59,15 +58,11 @@ const UnifiedProductCard = ({
     if (isInWishlist) {
       dispatch(removeFromWishlist(product.id));
       const message = "Removed from wishlist";
-      onSnackbar
-        ? onSnackbar(message, "info")
-        : enqueueSnackbar(message, "info");
+      onSnackbar ? onSnackbar(message, "info") : enqueueSnackbar(message, "info");
     } else {
-      dispatch(addToWishlist(product));
+      dispatch(addToWishlist(product.id));
       const message = "Added to wishlist";
-      onSnackbar
-        ? onSnackbar(message, "success")
-        : enqueueSnackbar(message, "success");
+      onSnackbar ? onSnackbar(message, "success") : enqueueSnackbar(message, "success");
     }
   };
 
@@ -94,14 +89,10 @@ const UnifiedProductCard = ({
 
   return (
     <div className={containerClasses[viewMode]}>
-      <div className="relative h-full">
+      <div className="relative h-full group">
         {product.oldPrice && (
           <span className="absolute top-3 left-3 bg-gradient-to-r from-green-400 to-green-500 text-white text-xs font-bold px-2 py-1 rounded-lg">
-            -
-            {Math.round(
-              ((product.oldPrice - product.price) / product.oldPrice) * 100
-            )}
-            %
+            -{Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)}%
           </span>
         )}
         <img
@@ -120,7 +111,7 @@ const UnifiedProductCard = ({
       </div>
 
       <div>
-        <div className="flex items-center text-gray-500">
+        <div className="flex items-center text-gray-500 text-xs sm:text-sm md:text-base">
           <FiveStars rating={product.rating} />
           <span className="ml-2">{product.rating.toFixed(1)} out of 5</span>
         </div>
@@ -128,7 +119,7 @@ const UnifiedProductCard = ({
           {product.title}
         </h3>
         <p className="mt-2 line-clamp-2 text-gray-600 text-xs sm:text-sm md:text-base lg:text-sm">
-          {getTruncatedDescription(product.description)}
+          {getTruncatedDescription(product.description || "")}
         </p>
         <div className="flex items-center gap-2 mt-4">
           <span className="text-gray-900 font-bold text-sm sm:text-base md:text-lg lg:text-base">
@@ -161,7 +152,7 @@ const UnifiedProductCard = ({
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
           product={product}
-          onAddToCart={handleAddToCart}
+          onAddToCart={() => dispatch(addToCart(product.id))}
         />
       )}
 
@@ -179,7 +170,7 @@ const UnifiedProductCard = ({
 
 UnifiedProductCard.propTypes = {
   product: PropTypes.shape({
-    id: PropTypes.number.isRequired,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     image: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,

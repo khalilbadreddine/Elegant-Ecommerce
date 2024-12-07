@@ -16,6 +16,7 @@
     "@heroicons/react": "^1.0.6",
     "@material-tailwind/react": "^2.1.10",
     "@mui/material": "^6.1.8",
+    "@redux-devtools/extension": "^3.3.0",
     "@vercel/speed-insights": "^1.1.0",
     "cloudinary": "^2.5.1",
     "elegant-ecommerce": "file:",
@@ -27,6 +28,7 @@
     "react-router-dom": "^6.28.0",
     "react-slick": "^0.30.2",
     "redux": "^5.0.1",
+    "redux-thunk": "^3.1.0",
     "slick-carousel": "^1.8.1",
     "swiper": "^11.1.15",
     "tailwind-scrollbar-hide": "^1.1.7"

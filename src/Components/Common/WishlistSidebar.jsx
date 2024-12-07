@@ -25,7 +25,9 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
   };
 
   const addAllToCart = () => {
-    wishlistItems.forEach((item) => dispatch(addToCart(item)));
+    // Assuming addToCart now requires just a product ID:
+    wishlistItems.forEach((item) => dispatch(addToCart(item.id)));
+
     setSnackbarMessage("All wishlist items added to cart");
     setSnackbarSeverity("success");
     setSnackbarOpen(true);
@@ -33,7 +35,8 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
   };
 
   const handleAddToCart = (item) => {
-    dispatch(addToCart(item));
+    // If addToCart requires an ID:
+    dispatch(addToCart(item.id));
     setSnackbarMessage(`${item.title} added to cart`);
     setSnackbarSeverity("success");
     setSnackbarOpen(true);
@@ -84,7 +87,6 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
 
   return (
     <>
-      {/* Backdrop */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40"
@@ -92,7 +94,6 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
         />
       )}
 
-      {/* Sidebar */}
       <div
         ref={sidebarRef}
         className="fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full z-50 flex flex-col"
@@ -117,7 +118,7 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
               price={item.price}
               onRemove={() => handleRemoveFromWishlist(item.id)}
               onAddToCart={() => handleAddToCart(item)}
-              ref={(el) => (itemsRef.current[index] = el)} // Store item references
+              ref={(el) => (itemsRef.current[index] = el)}
             />
           ))}
           {wishlistItems.length === 0 && (

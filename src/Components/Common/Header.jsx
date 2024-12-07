@@ -5,7 +5,6 @@ import { Cart, Hamburger, Search, Profile, Wishlist } from "./Icons";
 import Sidebar from "./Sidebar";
 import CartSidebar from "./CartSidebar";
 import WishlistSidebar from "./WishlistSidebar";
-import { isAuthenticated } from "../../utils/auth";
 
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -14,6 +13,7 @@ const Header = () => {
 
   const cartItems = useSelector((state) => state.cart.cartItems);
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
+  const { userInfo } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
 
@@ -22,6 +22,16 @@ const Header = () => {
   const closeSidebar = () => setIsSidebarOpen(false);
   const toggleCart = () => setIsCartOpen((prev) => !prev);
   const toggleWishlist = () => setIsWishlistOpen((prev) => !prev);
+
+  const handleProfileClick = () => {
+    if (!userInfo) {
+      // User not logged in
+      navigate("/signin");
+    } else {
+      // User is logged in
+      navigate("/profile");
+    }
+  };
 
   return (
     <header className="w-full bg-white p-4 flex items-center justify-between shadow-md">
@@ -56,13 +66,7 @@ const Header = () => {
         </div>
         <div
           className="hidden md:block w-5 h-5 rounded-full cursor-pointer"
-          onClick={() => {
-            if (!isAuthenticated()) {
-              navigate("/signin");
-            } else {
-              navigate("/profile");
-            }
-          }}
+          onClick={handleProfileClick}
         >
           <Profile />
         </div>

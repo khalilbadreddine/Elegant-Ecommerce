@@ -3,25 +3,18 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "../redux/actions/productActions";
 import { addToCart } from "../redux/actions/cartActions";
-import {
-  addToWishlist,
-  removeFromWishlist,
-} from "../redux/actions/wishlistActions";
+import { addToWishlist, removeFromWishlist } from "../redux/actions/wishlistActions";
 import SnackbarNotification from "../Components/Common/SnackbarNotification";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
 const Product = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-  const { productId } = useParams(); // Get the product ID from the URL
+  const { productId } = useParams();
   const dispatch = useDispatch();
 
   // Redux state
-  const products = useSelector((state) => state.products.filteredProducts);
+  const product = useSelector((state) => state.products.product);
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
-  const product = products.length > 0 ? products[0] : null;
 
   // Snackbar state
   const [snackbar, setSnackbar] = useState({
@@ -30,12 +23,8 @@ const Product = () => {
     severity: "success",
   });
 
-  const handleSnackbarClose = () => setSnackbar({ ...snackbar, open: false });
-
   // Check if the product is in the wishlist
-  const isInWishlist = wishlistItems.some(
-    (item) => item.id === parseInt(productId, 10)
-  );
+  const isInWishlist = wishlistItems.some((item) => item.id === parseInt(productId, 10));
 
   // Fetch product data on mount
   useEffect(() => {
@@ -75,9 +64,12 @@ const Product = () => {
     return () => clearInterval(interval);
   }, [product?.offerExpiry]);
 
+  // Snackbar handler
+  const handleSnackbarClose = () => setSnackbar({ ...snackbar, open: false });
+
   // Add to cart handler
   const handleAddToCart = () => {
-    dispatch(addToCart({ ...product, color: "Default" }));
+    dispatch(addToCart(product.id));
     setSnackbar({
       open: true,
       message: "Product added to cart!",
@@ -95,7 +87,7 @@ const Product = () => {
         severity: "info",
       });
     } else {
-      dispatch(addToWishlist(product));
+      dispatch(addToWishlist(product.id));
       setSnackbar({
         open: true,
         message: "Product added to wishlist!",
@@ -120,93 +112,51 @@ const Product = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Image Section */}
           <div className="relative">
-            <div className="block md:hidden">
-              <Swiper
-                spaceBetween={10}
-                slidesPerView={1}
-                slidesPerGroup={6}
-                loop={true}
-              >
-                {product.images.map((image, index) => (
-                  <SwiperSlide key={index}>
-                    <div className="w-full h-64 bg-gray-300 flex items-center justify-center text-gray-700 text-xl font-semibold rounded-lg">
-                      <img
-                        src={image}
-                        alt={product.title}
-                        className="w-full h-64 object-cover rounded-lg"
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-
-            <div className="hidden md:grid grid-cols-3 gap-4 md:h-[500px]">
+            <Swiper spaceBetween={10} slidesPerView={1} loop={true}>
               {product.images.map((image, index) => (
-                <div
-                  key={index}
-                  className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-700 text-lg font-semibold rounded-lg"
-                >
-                  <img
-                    src={image}
-                    alt={product.title}
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                </div>
+                <SwiperSlide key={index}>
+                  <div className="w-full h-64 bg-gray-300 flex items-center justify-center rounded-lg">
+                    <img src={image} alt={product.title} className="w-full h-64 object-cover rounded-lg" />
+                  </div>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
           </div>
 
           {/* Product Details */}
           <div>
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
             <p className="text-gray-600 text-sm mb-4">{product.description}</p>
-            <p className="text-gray-500 text-sm mb-4">
-              ★★★★★ ({product.sales} Sales)
-            </p>
-
             <div className="mb-4">
-              <span className="text-3xl font-bold text-gray-800">
-                ${product.price.toFixed(2)}
-              </span>
+              <span className="text-3xl font-bold text-gray-800">${product.price.toFixed(2)}</span>
               {product.oldPrice && (
-                <span className="text-gray-400 line-through ml-2">
-                  ${product.oldPrice.toFixed(2)}
-                </span>
+                <span className="text-gray-400 line-through ml-2">${product.oldPrice.toFixed(2)}</span>
               )}
             </div>
 
-            <div className="mb-4">
-              <p className="text-sm font-semibold text-gray-700 mb-2">
-                Offer expires in:
-              </p>
-              <div className="flex items-center gap-4 text-center">
-                <div>
-                  <div className="text-lg font-bold text-gray-800">
-                    {timeLeft.days}
+            {product.offerExpiry && (
+              <div className="mb-4">
+                <p className="text-sm font-semibold text-gray-700 mb-2">Offer expires in:</p>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <div className="text-lg font-bold">{timeLeft.days}</div>
+                    <p className="text-xs text-gray-500">Days</p>
                   </div>
-                  <p className="text-xs text-gray-500">Days</p>
-                </div>
-                <div>
-                  <div className="text-lg font-bold text-gray-800">
-                    {timeLeft.hours}
+                  <div>
+                    <div className="text-lg font-bold">{timeLeft.hours}</div>
+                    <p className="text-xs text-gray-500">Hours</p>
                   </div>
-                  <p className="text-xs text-gray-500">Hours</p>
-                </div>
-                <div>
-                  <div className="text-lg font-bold text-gray-800">
-                    {timeLeft.minutes}
+                  <div>
+                    <div className="text-lg font-bold">{timeLeft.minutes}</div>
+                    <p className="text-xs text-gray-500">Minutes</p>
                   </div>
-                  <p className="text-xs text-gray-500">Minutes</p>
-                </div>
-                <div>
-                  <div className="text-lg font-bold text-gray-800">
-                    {timeLeft.seconds}
+                  <div>
+                    <div className="text-lg font-bold">{timeLeft.seconds}</div>
+                    <p className="text-xs text-gray-500">Seconds</p>
                   </div>
-                  <p className="text-xs text-gray-500">Seconds</p>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="mb-4">
               <button
@@ -221,17 +171,6 @@ const Product = () => {
               >
                 {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               </button>
-            </div>
-
-            <div>
-              <h2 className="text-lg font-bold mb-2">Additional Info</h2>
-              <ul className="list-disc pl-5">
-                {product.additionalInfo.map((info, index) => (
-                  <li key={index} className="text-sm text-gray-700 mb-2">
-                    {info}
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
         </div>

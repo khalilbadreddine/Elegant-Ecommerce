@@ -1,9 +1,8 @@
-/* Shop.js */
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   fetchProducts,
-  applyFilters,
+  applyFiltersAction,
   sortProductsAction,
 } from "../redux/actions/productActions";
 import Filters from "../Components/Shop/Filters";
@@ -12,20 +11,17 @@ import ShopPageHeader from "../Components/Shop/ShopPageHeader";
 
 function Shop() {
   const dispatch = useDispatch();
-
-  // Access products and filters from Redux store
   const { filteredProducts } = useSelector((state) => state.products);
 
-  const [viewMode, setViewMode] = useState("grid"); // Default: 'grid'
-  const [currentPage, setCurrentPage] = useState(1); // Current page number
-  const itemsPerPage = 8; // Number of products per page
+  const [viewMode, setViewMode] = useState("grid");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
-  // Automatically adjust view mode based on screen size
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         if (viewMode === "list") {
-          setViewMode("grid"); // Fallback to grid if list view is not available
+          setViewMode("grid");
         }
       }
     };
@@ -37,13 +33,13 @@ function Shop() {
   }, [viewMode]);
 
   useEffect(() => {
-    // Fetch products from mock data (or API later)
+    // Fetch products from API
     dispatch(fetchProducts());
   }, [dispatch]);
 
   const handleFilterChange = (filters) => {
-    dispatch(applyFilters(filters));
-    setCurrentPage(1); // Reset to the first page when filters change
+    dispatch(applyFiltersAction(filters));
+    setCurrentPage(1);
   };
 
   const handleSortChange = (sortOption) => {
@@ -54,13 +50,11 @@ function Shop() {
     setViewMode(mode);
   };
 
-  // Calculate products for the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const currentProducts = filteredProducts.slice(
     startIndex,
     startIndex + itemsPerPage
   );
-
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
   return (
@@ -93,7 +87,6 @@ function Shop() {
         </div>
       </div>
 
-      {/* Pagination */}
       <div className="flex justify-center mt-10 mb-8 space-x-3">
         {Array.from({ length: totalPages }, (_, index) => (
           <button

@@ -1,49 +1,43 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, UPDATE_CART_QUANTITY } from "../actionTypes";
+// src/reducers/cartReducer.js
+import {
+  FETCH_CART_REQUEST,
+  FETCH_CART_SUCCESS,
+  FETCH_CART_FAILURE,
+  ADD_TO_CART_SUCCESS,
+  ADD_TO_CART_FAILURE,
+  UPDATE_CART_ITEM_SUCCESS,
+  UPDATE_CART_ITEM_FAILURE,
+  REMOVE_FROM_CART_SUCCESS,
+  REMOVE_FROM_CART_FAILURE,
+} from '../constants/actionTypes';
 
 const initialState = {
-  cartItems: JSON.parse(localStorage.getItem("cartItems")) || [],
+  cartItems: [],
+  loading: false,
+  error: null,
 };
 
-const cartReducer = (state = initialState, action) => {
+export default function cartReducer(state = initialState, action) {
   switch (action.type) {
-    case ADD_TO_CART: {
-      const existingItemIndex = state.cartItems.findIndex(
-        (item) => item.id === action.payload.id
-      );
+    case FETCH_CART_REQUEST:
+      return { ...state, loading: true };
+    case FETCH_CART_SUCCESS:
+      return { ...state, loading: false, cartItems: action.payload, error: null };
+    case FETCH_CART_FAILURE:
+      return { ...state, loading: false, error: action.payload };
 
-      if (existingItemIndex >= 0) {
-        const updatedCartItems = [...state.cartItems];
-        updatedCartItems[existingItemIndex].quantity += 1;
-        return { ...state, cartItems: updatedCartItems };
-      } else {
-        return {
-          ...state,
-          cartItems: [...state.cartItems, { ...action.payload, quantity: 1 }],
-        };
-      }
-    }
+    case ADD_TO_CART_SUCCESS:
+    case UPDATE_CART_ITEM_SUCCESS:
+    case REMOVE_FROM_CART_SUCCESS:
+      // After each cart mutation, the server returns the updated cartItems array
+      return { ...state, cartItems: action.payload, error: null };
 
-    case REMOVE_FROM_CART: {
-      return {
-        ...state,
-        cartItems: state.cartItems.filter((item) => item.id !== action.payload),
-      };
-    }
-
-    case UPDATE_CART_QUANTITY: {
-      return {
-        ...state,
-        cartItems: state.cartItems.map((item) =>
-          item.id === action.payload.productId
-            ? { ...item, quantity: action.payload.newQuantity }
-            : item
-        ),
-      };
-    }
+    case ADD_TO_CART_FAILURE:
+    case UPDATE_CART_ITEM_FAILURE:
+    case REMOVE_FROM_CART_FAILURE:
+      return { ...state, error: action.payload };
 
     default:
       return state;
   }
-};
-
-export default cartReducer;
+}

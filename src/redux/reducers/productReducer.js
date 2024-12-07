@@ -1,89 +1,92 @@
+// src/redux/reducers/productReducer.js
 import {
-  FETCH_PRODUCTS,
+  FETCH_PRODUCTS_REQUEST,
+  FETCH_PRODUCTS_SUCCESS,
+  FETCH_PRODUCTS_FAILURE,
+  FETCH_PRODUCT_REQUEST,
+  FETCH_PRODUCT_SUCCESS,
+  FETCH_PRODUCT_FAILURE,
   APPLY_FILTERS,
   SORT_PRODUCTS,
-} from "../actionTypes";
+} from '../constants/actionTypes';
 
 const initialState = {
-  products: [], // Original products
-  filteredProducts: [], // Products after filtering and sorting
-  filters: {
-    category: "All Categories",
-  },
-  sortOrder: "Price: Low to High",
+  products: [],
+  filteredProducts: [],
+  loading: false,
+  error: null,
+  // For single product
+  product: null,
+  productLoading: false,
+  productError: null,
 };
 
 const productReducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_PRODUCTS: {
-      // Handle fetching all products or a single product
-      const isSingleProduct = Array.isArray(action.payload) && action.payload.length === 1;
+    // Fetch all products
+    case FETCH_PRODUCTS_REQUEST:
+      return { ...state, loading: true, error: null };
+    case FETCH_PRODUCTS_SUCCESS:
       return {
         ...state,
-        products: isSingleProduct ? state.products : action.payload,
-        filteredProducts: isSingleProduct ? action.payload : sortProducts(action.payload, state.sortOrder),
+        loading: false,
+        products: action.payload,
+        filteredProducts: action.payload,
       };
-    }
+    case FETCH_PRODUCTS_FAILURE:
+      return { ...state, loading: false, error: action.payload };
 
-    case APPLY_FILTERS: {
-      // Update filters and apply them
-      const filtered = applyFilters(state.products, action.payload);
-      const sortedFiltered = sortProducts(filtered, state.sortOrder);
-      return {
-        ...state,
-        filters: action.payload,
-        filteredProducts: sortedFiltered,
-      };
-    }
+    // Fetch single product
+    case FETCH_PRODUCT_REQUEST:
+      return { ...state, productLoading: true, productError: null };
+    case FETCH_PRODUCT_SUCCESS:
+      return { ...state, productLoading: false, product: action.payload };
+    case FETCH_PRODUCT_FAILURE:
+      return { ...state, productLoading: false, productError: action.payload };
 
-    case SORT_PRODUCTS: {
-      // Update sortOrder and sort filtered products
-      const sortedProducts = sortProducts(state.filteredProducts, action.payload);
-      return {
-        ...state,
-        sortOrder: action.payload,
-        filteredProducts: sortedProducts,
-      };
-    }
+    // Apply filters
+    case APPLY_FILTERS:
+      const filters = action.payload;
+      let filtered = [...state.products];
+
+      // Example filter: category
+      if (filters.category) {
+        filtered = filtered.filter(
+          (product) => product.category === filters.category
+        );
+      }
+
+      // Add more filter conditions as needed
+
+      return { ...state, filteredProducts: filtered };
+
+    // Sort products
+    case SORT_PRODUCTS:
+      const sorted = [...state.filteredProducts];
+      const sortOption = action.payload;
+
+      switch (sortOption) {
+        case 'Price: Low to High':
+          sorted.sort((a, b) => a.price - b.price);
+          break;
+        case 'Price: High to Low':
+          sorted.sort((a, b) => b.price - a.price);
+          break;
+        case 'Newest':
+          sorted.sort(
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          );
+          break;
+        // Add more sorting options as needed
+        default:
+          break;
+      }
+
+      return { ...state, filteredProducts: sorted };
 
     default:
       return state;
   }
-};
-
-// Helper function to filter products
-const applyFilters = (products, filters) => {
-  let filtered = products;
-
-  if (filters.category && filters.category !== "All Categories") {
-    filtered = filtered.filter((product) => product.category === filters.category);
-  }
-
-  return filtered;
-};
-
-// Helper function to sort products
-const sortProducts = (products, sortOrder) => {
-  let sortedProducts = [...products];
-
-  switch (sortOrder) {
-    case "Price: Low to High":
-      sortedProducts.sort((a, b) => a.price - b.price);
-      break;
-    case "Price: High to Low":
-      sortedProducts.sort((a, b) => b.price - a.price);
-      break;
-    case "New Arrivals":
-      sortedProducts.sort((a, b) => new Date(b.dateAdded) - new Date(a.dateAdded));
-      break;
-    case "Bestsellers":
-      sortedProducts.sort((a, b) => b.sales - a.sales);
-      break;
-    default:
-      break;
-  }
-
-  return sortedProducts;
 };
 
 export default productReducer;

@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import PropTypes from "prop-types";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useRef } from "react";
@@ -12,34 +12,44 @@ import {
   Facebook,
   YouTube,
 } from "./Icons";
-import { isAuthenticated, signOut } from "../../utils/auth";
+import { logout } from "../../redux/actions/userActions"; // Import the logout action
 
 const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
   const sidebarRef = useRef(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Access cart and wishlist from Redux store
   const cartItems = useSelector((state) => state.cart.cartItems);
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
+  const { userInfo } = useSelector((state) => state.auth);
+
   const cartCount = cartItems.length;
   const wishlistCount = wishlistItems.length;
 
+  // Determine if user is authenticated by checking if userInfo is present
+  const isUserAuthenticated = !!userInfo;
+
   const handleSignInOrOut = () => {
-    if (isAuthenticated()) {
-      signOut();
+    if (isUserAuthenticated) {
+      // If user is logged in, log them out via Redux action
+      dispatch(logout());
       alert("You have been logged out.");
       navigate("/signin");
     } else {
+      // If user is not logged in, navigate to sign in page
       navigate("/signin");
     }
     onClose();
   };
 
-  // GSAP Animation
+  // GSAP Animation for Sidebar
   useEffect(() => {
     const sidebar = sidebarRef.current;
     const items = sidebar.querySelectorAll(".menu-item");
 
     if (isOpen) {
-      // Sidebar entrance
+      // Sidebar entrance animation
       gsap.fromTo(
         sidebar,
         { x: "-100%", opacity: 0 },
@@ -160,7 +170,7 @@ const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
           onClick={handleSignInOrOut}
           className="menu-item w-full bg-black text-white py-2 rounded-lg"
         >
-          {isAuthenticated() ? "Sign Out" : "Sign In"}
+          {isUserAuthenticated ? "Sign Out" : "Sign In"}
         </button>
 
         <div className="menu-item flex justify-around border-t border-gray-200 pt-4">

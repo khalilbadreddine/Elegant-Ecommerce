@@ -3,15 +3,14 @@ import PropTypes from "prop-types";
 import { useState, useEffect, useRef } from "react";
 import { Snackbar, Alert, useMediaQuery } from "@mui/material";
 import CartProductCard from "../Product/CartProductCard";
-import {
-  removeFromCart,
-  updateCartQuantity,
-} from "../../redux/actions/cartActions";
+import { removeFromCart, updateCartItem } from "../../redux/actions/cartActions";
 import { gsap } from "gsap";
 
 const CartSidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
-  const cartItems = useSelector((state) => state.cart.cartItems);
+  
+  // Ensure cartItems is always an array with fallback
+  const cartItems = useSelector((state) => state.cart.cartItems || []);
 
   const sidebarRef = useRef(null);
   const itemsRef = useRef([]);
@@ -26,13 +25,13 @@ const CartSidebar = ({ isOpen, onClose }) => {
     setSnackbarOpen(false);
   };
 
-  const subtotal = cartItems.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0
-  );
+  // Safeguard subtotal calculation
+  const subtotal = Array.isArray(cartItems)
+    ? cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)
+    : 0;
 
   const handleQuantityChange = (productId, newQuantity) => {
-    dispatch(updateCartQuantity(productId, newQuantity));
+    dispatch(updateCartItem(productId, newQuantity));
     setSnackbarMessage("Cart updated");
     setSnackbarSeverity("success");
     setSnackbarOpen(true);
@@ -45,12 +44,12 @@ const CartSidebar = ({ isOpen, onClose }) => {
     setSnackbarOpen(true);
   };
 
-  // GSAP Animation for Sidebar and Items
+  // GSAP animations for the sidebar and items
   useEffect(() => {
     const sidebar = sidebarRef.current;
 
     if (isOpen) {
-      // Sidebar entrance
+      // Sidebar entrance animation
       gsap.to(sidebar, {
         x: 0,
         duration: 0.3,
@@ -65,7 +64,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
         ease: "power1.out",
       });
     } else {
-      // Sidebar exit
+      // Sidebar exit animation
       gsap.to(sidebar, {
         x: "100%",
         duration: 0.3,
@@ -107,23 +106,24 @@ const CartSidebar = ({ isOpen, onClose }) => {
 
         {/* Cart Items Section */}
         <div className="flex-1 overflow-y-auto p-4">
-          {cartItems.map((item, index) => (
-            <CartProductCard
-              key={item.id}
-              productId={item.id}
-              image={item.image}
-              title={item.title}
-              color={item.color}
-              price={item.price}
-              quantity={item.quantity}
-              onRemove={() => handleRemoveFromCart(item.id)}
-              onQuantityChange={(newQuantity) =>
-                handleQuantityChange(item.id, newQuantity)
-              }
-              ref={(el) => (itemsRef.current[index] = el)} // Store item references
-            />
-          ))}
-          {cartItems.length === 0 && (
+          {Array.isArray(cartItems) && cartItems.length > 0 ? (
+            cartItems.map((item, index) => (
+              <CartProductCard
+                key={item.id}
+                productId={item.id}
+                image={item.image}
+                title={item.title}
+                color={item.color}
+                price={item.price}
+                quantity={item.quantity}
+                onRemove={() => handleRemoveFromCart(item.id)}
+                onQuantityChange={(newQuantity) =>
+                  handleQuantityChange(item.id, newQuantity)
+                }
+                ref={(el) => (itemsRef.current[index] = el)}
+              />
+            ))
+          ) : (
             <p className="text-gray-600">Your cart is empty.</p>
           )}
         </div>
@@ -150,7 +150,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
         </div>
       </div>
 
-      {/* Snackbar */}
+      {/* Snackbar for feedback messages */}
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
