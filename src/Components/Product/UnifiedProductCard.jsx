@@ -18,8 +18,9 @@ const UnifiedProductCard = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
-  const isInWishlist = wishlistItems.some((item) => item.id === product.id);
+  // Safeguard wishlistItems and ensure it's always an array
+  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems) || [];
+  const isInWishlist = Array.isArray(wishlistItems) && wishlistItems.some((item) => item.id === product.id);
 
   const [snackbarQueue, setSnackbarQueue] = useState([]);
   const [currentSnackbar, setCurrentSnackbar] = useState(null);
@@ -172,7 +173,7 @@ const UnifiedProductCard = ({
 
 UnifiedProductCard.propTypes = {
   product: PropTypes.shape({
-    _id: PropTypes.string.isRequired, // Use `_id` here
+    id: PropTypes.string.isRequired, // Ensure `id` is used consistently
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,
@@ -184,6 +185,5 @@ UnifiedProductCard.propTypes = {
   viewMode: PropTypes.oneOf(["grid", "list", "desktoplist"]),
   useNavigation: PropTypes.bool,
 };
-
 
 export default UnifiedProductCard;

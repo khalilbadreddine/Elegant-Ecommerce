@@ -11,8 +11,9 @@ const Header = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isWishlistOpen, setIsWishlistOpen] = useState(false);
 
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
+  const cartItems = useSelector((state) => state.cart.cartItems) || { items: [] };
+  
+  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems) || { items: [] };
   const { userInfo } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
@@ -73,18 +74,18 @@ const Header = () => {
         {/* Wishlist Icon */}
         <div className="relative cursor-pointer" onClick={toggleWishlist}>
           <Wishlist />
-          {wishlistItems.length > 0 && (
+          {wishlistItems.items && wishlistItems.items.length > 0 && (
             <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {wishlistItems.length}
+              {wishlistItems.items.length}
             </span>
           )}
         </div>
         {/* Cart Icon */}
         <div className="relative cursor-pointer" onClick={toggleCart}>
           <Cart />
-          {cartItems.length > 0 && (
+          {cartItems.items && cartItems.items.length > 0 && (
             <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {cartItems.length}
+              {cartItems.items.length}
             </span>
           )}
         </div>

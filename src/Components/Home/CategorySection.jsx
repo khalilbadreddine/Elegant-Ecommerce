@@ -1,7 +1,7 @@
 const CategorySection = () => {
-  const couchGray = "https://i.ibb.co/gSMKcrM/couch-gray.png";
-  const plakar = "https://i.ibb.co/mhxzGRz/plakar.png";
-  const toast = "https://i.ibb.co/NpRT8Xq/toast.png";
+  const couchGray = "https://res.cloudinary.com/dhxdbakbl/image/upload/q_auto/v1733587999/couch2_dgzpia.png";
+  const plakar = "https://res.cloudinary.com/dhxdbakbl/image/upload/q_auto/v1733587951/plakar_grq2xb.png";
+  const toast = "https://res.cloudinary.com/dhxdbakbl/image/upload/q_auto/v1733587969/toast_adkopn.png";
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4">
       {/* Living Room Section */}

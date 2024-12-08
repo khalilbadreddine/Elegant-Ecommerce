@@ -35,6 +35,7 @@ export const addToCart = (productId) => async (dispatch) => {
     dispatch({ type: ADD_TO_CART_REQUEST });
     const { data } = await api.post('/cart', { productId, quantity: 1 });
     dispatch({ type: ADD_TO_CART_SUCCESS, payload: data });
+    console.log("data",data);
   } catch (error) {
     dispatch({
       type: ADD_TO_CART_FAILURE,
@@ -42,6 +43,7 @@ export const addToCart = (productId) => async (dispatch) => {
     });
   }
 };
+
 
 // Update cart item quantity
 export const updateCartItem = (itemId, newQuantity) => async (dispatch) => {

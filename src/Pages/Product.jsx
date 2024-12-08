@@ -24,7 +24,7 @@ const Product = () => {
   });
 
   // Check if the product is in the wishlist
-  const isInWishlist = wishlistItems.some((item) => item.id === productId);
+  const isInWishlist = wishlistItems.items.some((item) => item.id === productId);
 
   // Fetch product data on mount
   useEffect(() => {

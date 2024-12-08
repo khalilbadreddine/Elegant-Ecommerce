@@ -20,12 +20,12 @@ const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
   const dispatch = useDispatch();
 
   // Access cart and wishlist from Redux store
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
+  const cartItems = useSelector((state) => state.cart.cartItems) || { items: [] };
+  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems) || [];
   const { userInfo } = useSelector((state) => state.auth);
 
-  const cartCount = cartItems.length;
-  const wishlistCount = wishlistItems.length;
+  const cartCount = cartItems.items?.length || 0;
+  const wishlistCount = wishlistItems.items?.length || 0;
 
   // Determine if user is authenticated by checking if userInfo is present
   const isUserAuthenticated = !!userInfo;
@@ -148,7 +148,7 @@ const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
           <span>Cart</span>
           <div className="flex items-center space-x-2">
             <Cart className="w-5 h-5" />
-            <span>{cartCount}</span>
+            {cartCount > 0 && <span>{cartCount}</span>}
           </div>
         </div>
 
@@ -162,7 +162,7 @@ const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
           <span>Wishlist</span>
           <div className="flex items-center space-x-2">
             <Wishlist className="w-5 h-5" />
-            <span>{wishlistCount}</span>
+            {wishlistCount > 0 && <span>{wishlistCount}</span>}
           </div>
         </div>
 

@@ -102,7 +102,7 @@ const NewArrival = () => {
           className="swiper-container"
         >
           {products.map((item, index) => {
-            console.log(item)
+          
             const id = item._id; // Map _id to id for compatibility
             if (!id) {
               console.warn(`Product at index ${index} is missing an id.`);

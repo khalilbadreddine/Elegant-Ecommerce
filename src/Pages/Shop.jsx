@@ -11,7 +11,9 @@ import ShopPageHeader from "../Components/Shop/ShopPageHeader";
 
 function Shop() {
   const dispatch = useDispatch();
-  const { filteredProducts } = useSelector((state) => state.products);
+  const { filteredProducts = [] } = useSelector((state) => state.products);
+
+  console.log("filteredProducts:", filteredProducts);
 
   const [viewMode, setViewMode] = useState("grid");
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +35,6 @@ function Shop() {
   }, [viewMode]);
 
   useEffect(() => {
-    // Fetch products from API
     dispatch(fetchProducts());
   }, [dispatch]);
 
@@ -57,6 +58,10 @@ function Shop() {
   );
   const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
 
+  if (!filteredProducts || filteredProducts.length === 0) {
+    return <p>Loading products...</p>; // Show loading state if no products are available
+  }
+
   return (
     <div className="p-4">
       <ShopPageHeader />
@@ -78,8 +83,8 @@ function Shop() {
         >
           {currentProducts.map((product) => (
             <UnifiedProductCard
-              key={product.id}
-              product={product}
+              key={product._id}
+              product={{ ...product, id: product._id }}
               viewMode={viewMode}
               useNavigation={true}
             />
