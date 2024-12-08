@@ -36,7 +36,7 @@ export default function cartReducer(state = initialState, action) {
     case UPDATE_CART_ITEM_FAILURE:
     case REMOVE_FROM_CART_FAILURE:
       return { ...state, error: action.payload };
-
+    
     default:
       return state;
   }
