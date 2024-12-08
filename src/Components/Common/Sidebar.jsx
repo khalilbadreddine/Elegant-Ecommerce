@@ -124,18 +124,21 @@ const Sidebar = ({ isOpen, onClose, onCartClick, onWishlistClick }) => {
 
       {/* Navigation Links */}
       <nav className="px-4 py-4 text-gray-700 text-sm flex-grow">
-        {["Home", "Shop", "Product", "Contact Us"].map((item, index) => (
+        {["Home", "Shop", "Contact Us"].map((item, index) => (
           <NavLink
             key={index}
             to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-            className="menu-item block py-3 border-b border-gray-200"
+            className={({ isActive }) =>
+              `menu-item block py-3 border-b border-gray-200 ${
+                isActive ? "font-bold text-black" : "hover:text-gray-900"
+              }`
+            }
             onClick={onClose}
           >
             {item}
           </NavLink>
         ))}
       </nav>
-
       {/* Bottom Section */}
       <div className="p-4 border-t border-gray-200 space-y-4 text-sm">
         <div

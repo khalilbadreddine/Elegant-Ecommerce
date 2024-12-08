@@ -1,41 +1,42 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Cart, Hamburger, Search, Profile, Wishlist } from "./Icons";
-import Sidebar from "./Sidebar";
-import CartSidebar from "./CartSidebar";
-import WishlistSidebar from "./WishlistSidebar";
 
-const Header = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+const Header = ({ openSidebar, toggleCart, toggleWishlist }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const cartItems = useSelector((state) => state.cart.cartItems) || { items: [] };
-  
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems) || { items: [] };
   const { userInfo } = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
 
-  // Handlers for Sidebars
-  const openSidebar = () => setIsSidebarOpen(true);
-  const closeSidebar = () => setIsSidebarOpen(false);
-  const toggleCart = () => setIsCartOpen((prev) => !prev);
-  const toggleWishlist = () => setIsWishlistOpen((prev) => !prev);
-
   const handleProfileClick = () => {
     if (!userInfo) {
-      // User not logged in
       navigate("/signin");
     } else {
-      // User is logged in
       navigate("/profile");
     }
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="w-full bg-white p-4 flex items-center justify-between shadow-md">
+    <header
+      className={`fixed z-50 p-4 flex items-center justify-between transition-all duration-300 ${
+        isScrolled
+          ? "bg-white shadow-lg rounded-lg w-[80%] top-4 left-1/2 transform -translate-x-1/2"
+          : "bg-white shadow-md w-full top-0 left-0"
+      }`}
+    >
       {/* Left Section */}
       <div className="flex items-center">
         <button onClick={openSidebar} className="md:hidden mr-2">
@@ -46,16 +47,28 @@ const Header = () => {
 
       {/* Center Section */}
       <nav className="hidden md:flex space-x-8 text-gray-700 text-sm font-medium">
-        <NavLink to="/" className="hover:text-gray-900">
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            isActive ? "text-black font-bold" : "hover:text-gray-900"
+          }
+        >
           Home
         </NavLink>
-        <NavLink to="/shop" className="hover:text-gray-900">
+        <NavLink
+          to="/shop"
+          className={({ isActive }) =>
+            isActive ? "text-black font-bold" : "hover:text-gray-900"
+          }
+        >
           Shop
         </NavLink>
-        <NavLink to="/product" className="hover:text-gray-900">
-          Product
-        </NavLink>
-        <NavLink to="/contact" className="hover:text-gray-900">
+        <NavLink
+          to="/contact"
+          className={({ isActive }) =>
+            isActive ? "text-black font-bold" : "hover:text-gray-900"
+          }
+        >
           Contact Us
         </NavLink>
       </nav>
@@ -74,7 +87,7 @@ const Header = () => {
         {/* Wishlist Icon */}
         <div className="relative cursor-pointer" onClick={toggleWishlist}>
           <Wishlist />
-          {wishlistItems.items && wishlistItems.items.length > 0 && (
+          {wishlistItems.items?.length > 0 && (
             <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {wishlistItems.items.length}
             </span>
@@ -83,27 +96,13 @@ const Header = () => {
         {/* Cart Icon */}
         <div className="relative cursor-pointer" onClick={toggleCart}>
           <Cart />
-          {cartItems.items && cartItems.items.length > 0 && (
+          {cartItems.items?.length > 0 && (
             <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {cartItems.items.length}
             </span>
           )}
         </div>
       </div>
-
-      {/* Sidebar */}
-      <Sidebar
-        isOpen={isSidebarOpen}
-        onClose={closeSidebar}
-        onCartClick={toggleCart}
-        onWishlistClick={toggleWishlist}
-      />
-
-      {/* Cart Sidebar */}
-      <CartSidebar isOpen={isCartOpen} onClose={toggleCart} />
-
-      {/* Wishlist Sidebar */}
-      <WishlistSidebar isOpen={isWishlistOpen} onClose={toggleWishlist} />
     </header>
   );
 };

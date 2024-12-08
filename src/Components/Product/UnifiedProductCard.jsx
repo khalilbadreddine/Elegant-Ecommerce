@@ -20,7 +20,15 @@ const UnifiedProductCard = ({
 
   // Safeguard wishlistItems and ensure it's always an array
   const wishlistItems = useSelector((state) => state.wishlist.wishlistItems) || [];
-  const isInWishlist = Array.isArray(wishlistItems) && wishlistItems.some((item) => item.id === product.id);
+  const cartItems = useSelector((state) => state.cart.cartItems) || [];
+
+  // Check if the product is in the wishlist
+  const isInWishlist = Array.isArray(wishlistItems.items) &&
+    wishlistItems.items.some((item) => item.productId._id === product.id);
+
+  // Check if the product is in the cart
+  const isInCart = Array.isArray(cartItems.items) &&
+    cartItems.items.some((item) => item.productId._id === product.id);
 
   const [snackbarQueue, setSnackbarQueue] = useState([]);
   const [currentSnackbar, setCurrentSnackbar] = useState(null);
@@ -40,22 +48,28 @@ const UnifiedProductCard = ({
   const handleSnackbarClose = () => setCurrentSnackbar(null);
 
   const handleAddToCart = () => {
-    dispatch(addToCart(product.id));
-    const message = "Product added to cart";
-    onSnackbar
-      ? onSnackbar(message, "success")
-      : enqueueSnackbar(message, "success");
+    if (!isInCart) {
+      dispatch(addToCart(product.id));
+      const message = "Product added to cart";
+      onSnackbar
+        ? onSnackbar(message, "success")
+        : enqueueSnackbar(message, "success");
+    }
   };
 
   const handleWishlistToggle = () => {
     if (isInWishlist) {
       dispatch(removeFromWishlist(product.id));
       const message = "Removed from wishlist";
-      onSnackbar ? onSnackbar(message, "info") : enqueueSnackbar(message, "info");
+      onSnackbar
+        ? onSnackbar(message, "info")
+        : enqueueSnackbar(message, "info");
     } else {
       dispatch(addToWishlist(product.id));
       const message = "Added to wishlist";
-      onSnackbar ? onSnackbar(message, "success") : enqueueSnackbar(message, "success");
+      onSnackbar
+        ? onSnackbar(message, "success")
+        : enqueueSnackbar(message, "success");
     }
   };
 
@@ -143,9 +157,14 @@ const UnifiedProductCard = ({
           </button>
           <button
             onClick={handleAddToCart}
-            className="flex-1 bg-gray-900 text-white py-2 rounded-lg text-xs sm:text-sm md:text-base lg:text-sm hover:bg-gray-800 transition duration-200"
+            className={`flex-1 py-2 rounded-lg text-xs sm:text-sm md:text-base lg:text-sm transition duration-200 ${
+              isInCart
+                ? "bg-green-500 text-white cursor-not-allowed"
+                : "bg-gray-900 text-white hover:bg-gray-800"
+            }`}
+            disabled={isInCart}
           >
-            Add to Cart
+            {isInCart ? "In Cart" : "Add to Cart"}
           </button>
         </div>
       </div>
@@ -173,7 +192,7 @@ const UnifiedProductCard = ({
 
 UnifiedProductCard.propTypes = {
   product: PropTypes.shape({
-    id: PropTypes.string.isRequired, // Ensure `id` is used consistently
+    id: PropTypes.string.isRequired,
     images: PropTypes.arrayOf(PropTypes.string).isRequired,
     title: PropTypes.string.isRequired,
     price: PropTypes.number.isRequired,

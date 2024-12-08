@@ -9,7 +9,7 @@ import { gsap } from "gsap";
 
 const WishlistSidebar = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false); // Add loading state
+  const [loading, setLoading] = useState(false);
   const wishlist = useSelector((state) => state.wishlist.wishlistItems || { items: [] });
   const wishlistItems = wishlist.items || [];
 
@@ -25,13 +25,13 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
   const handleSnackbarClose = () => setSnackbarOpen(false);
 
   const addAllToCart = () => {
-    setLoading(true); // Set loading state
+    setLoading(true);
     wishlistItems.forEach((item) => {
       if (item.productId?._id) {
         dispatch(addToCart(item.productId._id));
       }
     });
-    setLoading(false); // End loading
+    setLoading(false);
     setSnackbarMessage("All wishlist items added to cart");
     setSnackbarSeverity("success");
     setSnackbarOpen(true);
@@ -39,9 +39,9 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
   };
 
   const handleAddToCart = (item) => {
-    setLoading(true); // Start loading
+    setLoading(true);
     if (item.productId?._id) {
-      dispatch(addToCart(item.productId._id)).finally(() => setLoading(false)); // End loading after dispatch
+      dispatch(addToCart(item.productId._id)).finally(() => setLoading(false));
       setSnackbarMessage(`${item.productId.title} added to cart`);
       setSnackbarSeverity("success");
       setSnackbarOpen(true);
@@ -49,8 +49,8 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
   };
 
   const handleRemoveFromWishlist = (itemId) => {
-    setLoading(true); // Start loading
-    dispatch(removeFromWishlist(itemId)).finally(() => setLoading(false)); // End loading after dispatch
+    setLoading(true);
+    dispatch(removeFromWishlist(itemId)).finally(() => setLoading(false));
     setSnackbarMessage("Item removed from wishlist");
     setSnackbarSeverity("info");
     setSnackbarOpen(true);
@@ -58,10 +58,15 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     const sidebar = sidebarRef.current;
-  
+
     if (isOpen) {
-      gsap.to(sidebar, { x: 0, duration: 0.3, ease: "power1.out" });
-  
+      sidebar.style.display = "block";
+      gsap.to(sidebar, {
+        x: 0,
+        duration: 0.3,
+        ease: "power1.out",
+      });
+
       if (itemsRef.current.some((el) => el)) {
         gsap.to(itemsRef.current.filter((el) => el), {
           opacity: 1,
@@ -71,8 +76,15 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
         });
       }
     } else {
-      gsap.to(sidebar, { x: "100%", duration: 0.3, ease: "power1.in" });
-  
+      gsap.to(sidebar, {
+        x: "100%",
+        duration: 0.3,
+        ease: "power1.in",
+        onComplete: () => {
+          sidebar.style.display = "none";
+        },
+      });
+
       if (itemsRef.current.some((el) => el)) {
         gsap.to(itemsRef.current.filter((el) => el), {
           opacity: 0,
@@ -83,7 +95,7 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
       }
     }
   }, [isOpen]);
-  
+
   return (
     <>
       {isOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={onClose} />}
@@ -91,48 +103,50 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
         ref={sidebarRef}
         className="fixed top-0 right-0 w-80 h-full bg-white shadow-lg transform translate-x-full z-50 flex flex-col"
       >
-        {/* Header */}
-        <div className="p-4 flex justify-between items-center border-b">
-          <h2 className="text-lg font-bold">Wishlist</h2>
-          <button onClick={onClose} className="text-gray-600">✕</button>
-        </div>
+          {/* Header */}
+          <div className="p-4 flex justify-between items-center border-b">
+            <h2 className="text-lg font-bold">Wishlist</h2>
+            <button onClick={onClose} className="text-gray-600">✕</button>
+          </div>
 
-        {/* Wishlist Items */}
-        <div className="flex-1 overflow-y-auto p-4">
-          {loading ? ( // Show loading indicator
-            <p className="text-gray-500">Loading wishlist...</p>
-          ) : wishlistItems.length > 0 ? (
-            wishlistItems.map((item, index) => (
-              <WishlistProductCard
-                key={item._id}
-                productId={item.productId?._id || ""}
-                image={item.productId?.images?.[0] || ""}
-                title={item.productId?.title || "No Title Available"}
-                price={item.productId?.price || 0}
-                onRemove={() => handleRemoveFromWishlist(item._id)}
-                onAddToCart={() => handleAddToCart(item)}
-                ref={(el) => (itemsRef.current[index] = el)}
-              />
-            ))
-          ) : (
-            <p className="text-gray-600">Your wishlist is empty.</p>
-          )}
-        </div>
+          {/* Scrollable Items Section */}
+          <div className="flex-1 overflow-y-scroll p-4">
+            {loading ? (
+              <p className="text-gray-500">Loading wishlist...</p>
+            ) : wishlistItems.length > 0 ? (
+              wishlistItems.map((item, index) => (
+                <WishlistProductCard
+                  key={item._id}
+                  productId={item.productId?._id || ""}
+                  image={item.productId?.images?.[0] || ""}
+                  title={item.productId?.title || "No Title Available"}
+                  price={item.productId?.price || 0}
+                  onRemove={() => handleRemoveFromWishlist(item._id)}
+                  onAddToCart={() => handleAddToCart(item)}
+                  ref={(el) => (itemsRef.current[index] = el)}
+                />
+              ))
+            ) : (
+              <p className="text-gray-600">Your wishlist is empty.</p>
+            )}
+          </div>
 
-        {/* Footer */}
-        <div className="p-4 border-t bg-white">
-          <button
-            onClick={addAllToCart}
-            className="w-full bg-black text-white py-2 mt-4"
-            disabled={wishlistItems.length === 0 || loading}
-          >
-            Add All to Cart
-          </button>
-          <button onClick={onClose} className="w-full bg-gray-200 text-black py-2 mt-2">
-            Close Wishlist
-          </button>
-        </div>
+          {/* Footer Section */}
+          <div className="p-4 border-t bg-white">
+            <button
+              onClick={addAllToCart}
+              className="w-full bg-black text-white py-2 mt-4"
+              disabled={wishlistItems.length === 0 || loading}
+            >
+              Add All to Cart
+            </button>
+            <button onClick={onClose} className="w-full bg-gray-200 text-black py-2 mt-2">
+              Close Wishlist
+            </button>
+          </div>
       </div>
+
+
 
       {/* Snackbar */}
       <Snackbar
@@ -153,8 +167,6 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
     </>
   );
 };
-
-
 
 WishlistSidebar.propTypes = {
   isOpen: PropTypes.bool.isRequired,
