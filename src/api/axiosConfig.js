@@ -3,7 +3,7 @@ import axios from 'axios';
 import store from '../redux/store';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API, // Replace with your actual API base URL
+  baseURL: "https://ecommerce-api-elegant-production.up.railway.app/api/", // Replace with your actual API base URL
 });
 
 api.interceptors.request.use(
