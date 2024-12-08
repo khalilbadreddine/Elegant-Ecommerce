@@ -3,7 +3,7 @@ import axios from 'axios';
 import store from '../redux/store';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api', // Replace with your actual API base URL
+  baseURL: process.env.REACT_APP_API, // Replace with your actual API base URL
 });
 
 api.interceptors.request.use(
