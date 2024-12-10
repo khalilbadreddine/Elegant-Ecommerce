@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "../redux/actions/productActions";
@@ -14,7 +14,8 @@ const Product = () => {
 
   // Redux state
   const product = useSelector((state) => state.products.product);
-  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
+  const cartItems = useSelector((state) => state.cart.cartItems) || { items: [] };
+  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems) || { items: [] };
 
   // Snackbar state
   const [snackbar, setSnackbar] = useState({
@@ -23,8 +24,20 @@ const Product = () => {
     severity: "success",
   });
 
-  // Check if the product is in the wishlist
-  const isInWishlist = wishlistItems.items.some((item) => item.id === productId);
+  // Memoized cart and wishlist checks
+  const isInCart = useMemo(
+    () =>
+      Array.isArray(cartItems.items) &&
+      cartItems.items.some((item) => item.productId === productId),
+    [cartItems, productId]
+  );
+
+  const isInWishlist = useMemo(
+    () =>
+      Array.isArray(wishlistItems.items) &&
+      wishlistItems.items.some((item) => item.productId === productId),
+    [wishlistItems, productId]
+  );
 
   // Fetch product data on mount
   useEffect(() => {
@@ -41,7 +54,6 @@ const Product = () => {
     seconds: 0,
   });
 
-  // Calculate the time remaining for the offer expiry
   useEffect(() => {
     if (!product?.offerExpiry) return;
 
@@ -74,12 +86,14 @@ const Product = () => {
 
   // Add to cart handler
   const handleAddToCart = () => {
-    dispatch(addToCart(product._id));
-    setSnackbar({
-      open: true,
-      message: "Product added to cart!",
-      severity: "success",
-    });
+    if (!isInCart) {
+      dispatch(addToCart(product._id));
+      setSnackbar({
+        open: true,
+        message: "Product added to cart!",
+        severity: "success",
+      });
+    }
   };
 
   // Wishlist toggle handler
@@ -101,7 +115,6 @@ const Product = () => {
     }
   };
 
-  // Render a loading state if the product isn't yet available
   if (!product) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -112,34 +125,25 @@ const Product = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      {/* Product Page Container */}
       <div className="max-w-6xl mx-auto bg-white p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Image Section */}
           <div className="relative">
-            {/* Mobile Swiper */}
             <div className="block md:hidden">
               <Swiper spaceBetween={10} slidesPerView={1} loop={true}>
                 {product.images.map((image, index) => (
                   <SwiperSlide key={index}>
-                    <div className="w-full h-64 bg-gray-300 flex items-center justify-center rounded-lg">
-                      <img
-                        src={image}
-                        alt={product.title}
-                        className="w-full h-64 object-cover rounded-lg"
-                      />
-                    </div>
+                    <img
+                      src={image}
+                      alt={product.title}
+                      className="w-full h-64 object-cover rounded-lg"
+                    />
                   </SwiperSlide>
                 ))}
               </Swiper>
             </div>
-            {/* Desktop Grid */}
             <div className="hidden md:grid grid-cols-3 gap-4 md:h-[500px]">
               {product.images.map((image, index) => (
-                <div
-                  key={index}
-                  className="w-full h-full bg-gray-300 flex items-center justify-center rounded-lg"
-                >
+                <div key={index} className="w-full h-full bg-gray-300">
                   <img
                     src={image}
                     alt={product.title}
@@ -150,14 +154,9 @@ const Product = () => {
             </div>
           </div>
 
-          {/* Product Details */}
           <div>
             <h1 className="text-3xl font-bold mb-2">{product.title}</h1>
             <p className="text-gray-600 text-sm mb-4">{product.description}</p>
-            <p className="text-gray-500 text-sm mb-4">
-              ★★★★★ ({product.sales} Sales)
-            </p>
-
             <div className="mb-4">
               <span className="text-3xl font-bold text-gray-800">
                 ${product.price.toFixed(2)}
@@ -174,7 +173,7 @@ const Product = () => {
                 <p className="text-sm font-semibold text-gray-700 mb-2">
                   Offer expires in:
                 </p>
-                <div className="flex items-center gap-4 text-center">
+                <div className="flex items-center gap-4">
                   <div>
                     <div className="text-lg font-bold text-gray-800">
                       {timeLeft.days}
@@ -206,33 +205,30 @@ const Product = () => {
             <div className="mb-4">
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-black text-white py-3 rounded-md text-lg font-semibold mb-2"
+                className={`w-full py-3 rounded-md text-lg font-semibold mb-2 ${
+                  isInCart
+                    ? "bg-green-500 text-white cursor-not-allowed"
+                    : "bg-black text-white hover:bg-gray-800"
+                }`}
+                disabled={isInCart}
               >
-                Add to Cart
+                {isInCart ? "In Cart" : "Add to Cart"}
               </button>
               <button
                 onClick={handleWishlistToggle}
-                className="w-full border border-gray-300 py-2 rounded-md text-gray-700 text-lg"
+                className={`w-full border py-2 rounded-md text-lg ${
+                  isInWishlist
+                    ? "border-red-500 text-red-500 hover:bg-red-100"
+                    : "border-gray-300 text-gray-700 hover:bg-gray-100"
+                }`}
               >
                 {isInWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
               </button>
-            </div>
-
-            <div>
-              <h2 className="text-lg font-bold mb-2">Additional Info</h2>
-              <ul className="list-disc pl-5">
-                {product.additionalInfo.map((info, index) => (
-                  <li key={index} className="text-sm text-gray-700 mb-2">
-                    {info}
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Snackbar Notification */}
       <SnackbarNotification
         open={snackbar.open}
         onClose={handleSnackbarClose}
