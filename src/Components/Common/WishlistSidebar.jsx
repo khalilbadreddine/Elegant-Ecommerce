@@ -110,7 +110,7 @@ const WishlistSidebar = ({ isOpen, onClose }) => {
           </div>
 
           {/* Scrollable Items Section */}
-          <div className="flex-1 overflow-y-scroll p-4">
+          <div className="flex-1 overflow-y-scroll p-4 max-h-[70vh]">
             {loading ? (
               <p className="text-gray-500">Loading wishlist...</p>
             ) : wishlistItems.length > 0 ? (

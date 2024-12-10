@@ -95,6 +95,10 @@ const NewArrival = () => {
           modules={[Navigation]}
           navigation={true}
           loop={true}
+          autoplay={{
+            delay: 1500,
+            disableOnInteraction: false,
+          }}
           centeredSlides={true}
           slidesPerView="auto"
           freeMode={true}

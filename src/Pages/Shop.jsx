@@ -64,7 +64,7 @@ function Shop() {
 
   return (
     <div className="p-4">
-      <ShopPageHeader />
+      <ShopPageHeader products={filteredProducts} />
       <Filters
         onFilterChange={handleFilterChange}
         onSortChange={handleSortChange}
