@@ -25,7 +25,7 @@ const ShopPageHeader = ({ products }) => {
   };
 
   return (
-    <div className="mt-8 px-4 sm:px-8 lg:px-16 bg-gray-900 py-12 rounded-lg shadow-lg relative overflow-hidden">
+    <div className="mt-12 px-4 sm:px-8 lg:px-16 bg-gray-900 py-12 rounded-lg shadow-lg relative overflow-hidden">
       {/* Title */}
       <h1 className="text-center text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-8 text-white tracking-wide">
         Trending Products
@@ -81,7 +81,7 @@ const ShopPageHeader = ({ products }) => {
           >
             <div
               onClick={() => handleCardClick(product._id)}
-              className="relative w-[280px] h-[380px] md:w-[320px] md:h-[420px] overflow-hidden rounded-lg shadow-lg bg-gray-800 mb-10 cursor-pointer"
+              className="relative w-[280px] h-[380px] md:w-[320px] md:h-[420px] overflow-hidden rounded-lg shadow-lg bg-gray-800 mb-10 cursor-pointer "
             >
               {/* Background Image */}
               <img

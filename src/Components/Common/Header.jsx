@@ -31,7 +31,7 @@ const Header = ({ openSidebar, toggleCart, toggleWishlist }) => {
 
   return (
     <header
-      className={`fixed z-50 p-4 flex items-center justify-between transition-all duration-300 ${
+      className={`fixed top-10 z-50 p-4 flex items-center justify-between transition-all duration-300 ${
         isScrolled
           ? "bg-white shadow-lg rounded-lg w-[80%] top-4 left-1/2 transform -translate-x-1/2"
           : "bg-white shadow-md w-full top-0 left-0"
