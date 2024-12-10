@@ -147,6 +147,21 @@ npm run build
 npm run preview
 ```
 
+## 🔗 Backend API
+
+This project uses a dedicated backend API which can be found at:
+[Elegant E-Commerce API](https://github.com/khalilbadreddine/Ecommerce-Api--Elegant)
+
+The API provides all the necessary endpoints for:
+- User authentication
+- Product management
+- Cart operations
+- Wishlist functionality
+- Order processing
+- And more...
+
+Make sure to check the API documentation for detailed information about available endpoints and their usage.
+
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -161,7 +176,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👥 Authors
 
-- **khalil badr eddine** - *Initial work* - [YourGithub](https://github.com/khalilbadredine)
+- **khalil badr eddine** - *Initial work* 
+
 
 ## 🙏 Acknowledgments
 
@@ -170,3 +186,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Tailwind CSS
 - Material-UI Team
 - GSAP Animation Library
+
+
+
